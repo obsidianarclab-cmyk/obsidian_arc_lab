@@ -1,8 +1,8 @@
 if(sessionStorage.getItem('oa_admin')!=='yes') location.replace('admin-login.html');
 
 const KEY='obsidian_arc_records_v1';
-const SHEETS_WEB_APP_URL='https://script.google.com/macros/s/AKfycbwuBnBddKHzx0898zUa6LFXHo03iCQDchBcRGJnbK0s4oJCWxhW2lNmk1Wq5aN8cEHTOw/exec';
-const SHEETS_API_KEY='obsidian_arc_lab';
+const SHEETS_WEB_APP_URL='https://script.google.com/macros/s/AKfycbwoJcI043jIbkAdV5OUcQg7lBp4U5rMl5jXdmKVfIWOovNSncHYZXmIiQODUpqval0m/exec';
+const SHEETS_API_KEY='Obsidian_Arc_Lab_Record';
 const sheetsEnabled=()=>SHEETS_WEB_APP_URL.startsWith('https://script.google.com/macros/s/')&&SHEETS_WEB_APP_URL.endsWith('/exec');
 let data=JSON.parse(localStorage.getItem(KEY)||'{"orders":[],"expenses":[],"products":[],"inventory":[]}');
 data.orders=data.orders||[];
