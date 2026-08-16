@@ -1,0 +1,11 @@
+Upload all files and folders to the root of your GitHub repository.
+The catalogue is public. ADMIN LOGIN opens admin-login.html.
+
+Temporary login:
+Email: obsidianarclab@gmail.com
+Password: tiviviji
+
+IMPORTANT: This is client-side HTML protection only. The login details can be
+found by inspecting the published JavaScript. Records are saved only in the
+current browser's local storage and will not automatically appear on another
+device. Replace this with Firebase Authentication and a database later.

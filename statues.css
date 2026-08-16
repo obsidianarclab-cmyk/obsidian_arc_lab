@@ -1,0 +1,282 @@
+:root {
+  --statue-bg: #080808;
+  --statue-panel: #11110f;
+  --statue-panel-soft: #171714;
+  --statue-gold: #d7c39a;
+  --statue-gold-muted: #9c8a68;
+  --statue-copy: #aaa59b;
+  --statue-line: rgba(215, 195, 154, .18);
+}
+
+.statues-page {
+  min-height: 100vh;
+  padding-top: 102px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(148, 116, 57, .10), transparent 32rem),
+    var(--statue-bg);
+  color: #f6f1e7;
+}
+
+.statues-page .logo { text-decoration: none; }
+
+.statue-hero {
+  position: relative;
+  padding: 92px 24px 60px;
+  text-align: center;
+}
+
+.statue-hero::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 52px;
+  margin: 42px auto 0;
+  background: linear-gradient(var(--statue-gold), transparent);
+}
+
+.statue-eyebrow {
+  color: var(--statue-gold-muted);
+  font-family: Inter, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .32em;
+}
+
+.statue-hero h1 {
+  margin-top: 18px;
+  color: #f4ead7;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(52px, 7vw, 92px);
+  font-weight: 500;
+  line-height: .9;
+}
+
+.statue-hero h1 em {
+  color: var(--statue-gold);
+  font-weight: 400;
+}
+
+.statue-intro {
+  max-width: 590px;
+  margin: 24px auto 0;
+  color: var(--statue-copy);
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.statue-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  max-width: 1540px;
+  margin: 0 auto;
+  padding: 20px 5vw 110px;
+}
+
+.statue-card {
+  overflow: hidden;
+  border: 1px solid var(--statue-line);
+  border-radius: 18px;
+  outline: none;
+  background: linear-gradient(145deg, #151513, #0e0e0d);
+  cursor: pointer;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, .28);
+  transition: transform .4s ease, border-color .4s ease, box-shadow .4s ease;
+}
+
+.statue-card:hover,
+.statue-card:focus-visible {
+  transform: translateY(-8px);
+  border-color: rgba(215, 195, 154, .66);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .55), 0 0 30px rgba(215, 195, 154, .08);
+}
+
+.statue-card__image {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  padding: 26px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 44%, #28241d 0, #191816 52%, #111 100%);
+}
+
+.statue-card__image::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 32%;
+  background: linear-gradient(transparent, rgba(7, 7, 7, .64));
+  pointer-events: none;
+}
+
+.statue-card__image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: contain;
+  transition: transform .6s ease, filter .6s ease;
+}
+
+.statue-card:hover img { transform: scale(1.035); filter: brightness(1.05); }
+
+.statue-card__view {
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  z-index: 1;
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 30px;
+  background: rgba(5, 5, 5, .75);
+  color: #e5d6b8;
+  font-family: Inter, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: .3s ease;
+}
+
+.statue-card:hover .statue-card__view,
+.statue-card:focus-visible .statue-card__view { opacity: 1; transform: none; }
+
+.statue-card__body { position: relative; padding: 26px 28px 30px; }
+.statue-card__body::before { content: ""; display: block; width: 36px; height: 1px; margin-bottom: 18px; background: var(--statue-gold); }
+.statue-card__body p { margin-bottom: 7px; color: var(--statue-gold-muted); font-family: Inter, sans-serif; font-size: 9px; font-weight: 600; letter-spacing: .22em; }
+.statue-card__body h2 { color: #ead8b4; font-family: "Cormorant Garamond", Georgia, serif; font-size: clamp(30px, 3vw, 40px); font-weight: 500; }
+.statue-card__body span { display: block; margin-top: 6px; color: #807d77; font-family: Inter, sans-serif; font-size: 11px; }
+
+.statue-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  place-items: center;
+  padding: 24px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, .88);
+  backdrop-filter: blur(12px);
+}
+
+.statue-modal.is-open { display: grid; animation: statueFade .25s ease; }
+@keyframes statueFade { from { opacity: 0; } to { opacity: 1; } }
+
+.statue-modal__box {
+  position: relative;
+  width: min(1120px, 100%);
+  max-height: 92vh;
+  padding: 30px;
+  overflow-y: auto;
+  border: 1px solid rgba(215, 195, 154, .25);
+  border-radius: 20px;
+  background: #0e0e0d;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, .72);
+}
+
+.statue-modal__close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 5;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(215, 195, 154, .38);
+  border-radius: 50%;
+  background: rgba(14, 14, 13, .9);
+  color: var(--statue-gold);
+  font: 25px/1 Inter, sans-serif;
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+.statue-modal__close:hover { color: #111; background: var(--statue-gold); transform: rotate(90deg); }
+.statue-modal__grid { display: grid; grid-template-columns: 1.08fr .92fr; gap: 42px; align-items: center; }
+
+.statue-gallery__main {
+  position: relative;
+  display: grid;
+  min-height: 510px;
+  padding: 24px;
+  place-items: center;
+  border: 1px solid var(--statue-line);
+  border-radius: 15px;
+  background: radial-gradient(circle, #24211c, #151513 65%);
+}
+
+.statue-gallery__main img { width: 100%; height: 460px; object-fit: contain; }
+.statue-gallery__main span { position: absolute; left: 20px; bottom: 17px; color: var(--statue-gold-muted); font-family: Inter, sans-serif; font-size: 9px; letter-spacing: .18em; }
+.statue-gallery__thumbs { display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 10px; margin-top: 10px; }
+
+.statue-gallery__thumbs button {
+  padding: 7px;
+  border: 1px solid var(--statue-line);
+  border-radius: 10px;
+  background: var(--statue-panel-soft);
+  cursor: pointer;
+  transition: .25s ease;
+}
+
+.statue-gallery__thumbs button:hover,
+.statue-gallery__thumbs button.is-active { border-color: var(--statue-gold); transform: translateY(-2px); }
+.statue-gallery__thumbs img { width: 100%; height: 84px; object-fit: contain; }
+.statue-details { padding: 34px 20px 24px 0; }
+.statue-details h2 { margin: 13px 0 18px; color: #f3e8d3; font-family: "Cormorant Garamond", Georgia, serif; font-size: clamp(44px, 5vw, 66px); font-weight: 500; line-height: .95; }
+.statue-details__desc { color: var(--statue-copy); font-family: Inter, sans-serif; font-size: 13px; line-height: 1.75; }
+
+.statue-specs { margin: 25px 0; border-top: 1px solid var(--statue-line); }
+.statue-specs div { display: grid; grid-template-columns: 92px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--statue-line); }
+.statue-specs dt { color: var(--statue-gold-muted); font-family: Inter, sans-serif; font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.statue-specs dd { color: #d5d0c6; font-family: Inter, sans-serif; font-size: 12px; }
+.statue-details label { display: block; margin-bottom: 8px; color: var(--statue-gold); font-family: Inter, sans-serif; font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.statue-details select { width: 100%; padding: 14px; border: 1px solid var(--statue-line); border-radius: 8px; outline: none; background: #171715; color: #eee7da; font-family: Inter, sans-serif; }
+.statue-details select:focus { border-color: var(--statue-gold); }
+.statue-details__note { margin: 14px 0; color: #77736b; font-family: Inter, sans-serif; font-size: 10px; line-height: 1.55; }
+
+.statue-whatsapp {
+  display: flex;
+  width: 100%;
+  padding: 15px 17px;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  border-radius: 8px;
+  background: #d6c7a6;
+  color: #0b0b0a;
+  font-family: Inter, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+.statue-whatsapp:hover { background: #fff; transform: translateY(-2px); }
+.statue-footer { display: flex; padding: 28px 5vw; align-items: center; justify-content: space-between; border-top: 1px solid var(--statue-line); color: #6f6b64; font-family: Inter, sans-serif; font-size: 10px; letter-spacing: .08em; }
+.statue-footer span { color: var(--statue-gold-muted); letter-spacing: .18em; }
+
+@media (max-width: 950px) {
+  .statue-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .statue-modal__grid { grid-template-columns: 1fr; }
+  .statue-details { padding: 10px 4px 0; }
+}
+
+@media (max-width: 620px) {
+  .statues-page { padding-top: 125px; }
+  .statue-hero { padding: 68px 20px 40px; }
+  .statue-list { grid-template-columns: 1fr; padding: 10px 18px 75px; }
+  .statue-card__view { opacity: 1; transform: none; }
+  .statue-modal { padding: 9px; align-items: start; }
+  .statue-modal__box { margin-top: 8px; padding: 54px 15px 20px; border-radius: 14px; }
+  .statue-gallery__main { min-height: 335px; padding: 12px; }
+  .statue-gallery__main img { height: 305px; }
+  .statue-gallery__thumbs img { height: 64px; }
+  .statue-footer { flex-direction: column; gap: 8px; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}

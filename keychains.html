@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Keychains | Obsidian Arc Lab</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="professional.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="statue-page">
+
+<header class="navbar">
+  <div class="logo">
+    Obsidian Arc<br>
+    <span>LAB · EST. 2026</span>
+  </div>
+
+  <nav>
+    <a href="index.html">HOME</a>
+    <a href="collection.html">COLLECTION</a>
+    <a class="admin-link" href="admin-login.html">ADMIN LOGIN</a>
+  </nav>
+</header>
+
+<section class="statue-hero">
+  <p class="small">— CUSTOM ENGRAVED COLLECTION</p>
+  <h1>Keychains Collection</h1>
+  <p>Choose keychain, colour, text length and custom name.</p>
+</section>
+
+<section class="statue-list">
+
+  <div class="statue-thumb" onclick="openProduct('namekeychain')">
+    <img src="https://via.placeholder.com/500x500/d4af37/000000?text=Name+Keychain">
+    <h2>Custom Name Keychain</h2>
+  </div>
+
+  <div class="statue-thumb" onclick="openProduct('animekeychain')">
+    <img src="https://via.placeholder.com/500x500/111111/d4af37?text=Anime+Keychain">
+    <h2>Anime Keychain</h2>
+  </div>
+
+</section>
+
+<div id="productModal" class="modal">
+  <div class="modal-box">
+
+    <button class="close-btn" onclick="closeProduct()">×</button>
+
+    <div class="modal-grid">
+
+      <div>
+        <img id="mainImg" class="main-product-img">
+
+        <div class="angle-row">
+          <img id="frontImg" onclick="changeAngle('front')">
+          <img id="sideImg" onclick="changeAngle('side')">
+          <img id="backImg" onclick="changeAngle('back')">
+        </div>
+      </div>
+
+      <div class="detail-info">
+        <p class="small">OBSIDIAN ARC LAB</p>
+        <h2 id="productName"></h2>
+
+        <p><b>Size:</b> <span id="productSize"></span></p>
+        <p><b>Material:</b> <span id="productMaterial"></span></p>
+        <p><b>Weight:</b> <span id="productWeight"></span></p>
+        <p id="productDesc"></p>
+
+        <label>Choose Colour</label>
+        <select id="colourSelect" onchange="changeColour()"></select>
+
+        <div id="customTextArea">
+          <label>Choose Text Length</label>
+          <select id="textLength" onchange="updateTextLimit()">
+            <option value="short" data-min="1" data-max="6">1 - 6 letters</option>
+            <option value="medium" data-min="7" data-max="9">7 - 9 letters</option>
+            <option value="long" data-min="10" data-max="16">10 - 16 letters</option>
+          </select>
+
+          <label>Custom Name / Text</label>
+          <input
+            type="text"
+            id="customText"
+            placeholder="Enter custom name"
+            maxlength="6"
+            oninput="validateTextLength()"
+          >
+
+          <p id="textWarning" class="warning-text"></p>
+        </div>
+
+        <button class="whatsapp-btn" onclick="askWhatsapp()">ASK ON WHATSAPP</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+let currentProduct = "";
+let currentColour = "";
+let currentAngle = "front";
+
+const products = {
+  namekeychain: {
+    name: "Custom Name Keychain",
+    desc: "Personalized engraved name keychain with premium 3D printing finish.",
+    customText: true,
+
+    colours: {
+      Gold: {
+        size: "7cm",
+        material: "Gold Silk PLA",
+        weight: "40g",
+        front: "https://via.placeholder.com/500x500/d4af37/000000?text=Gold+Front",
+        side: "https://via.placeholder.com/500x500/d4af37/000000?text=Gold+Side",
+        back: "https://via.placeholder.com/500x500/d4af37/000000?text=Gold+Back"
+      },
+
+      Black: {
+        size: "7cm",
+        material: "Matte Black PLA+",
+        weight: "38g",
+        front: "https://via.placeholder.com/500x500/000000/ffffff?text=Black+Front",
+        side: "https://via.placeholder.com/500x500/000000/ffffff?text=Black+Side",
+        back: "https://via.placeholder.com/500x500/000000/ffffff?text=Black+Back"
+      },
+
+      White: {
+        size: "7cm",
+        material: "White PLA+",
+        weight: "38g",
+        front: "https://via.placeholder.com/500x500/ffffff/000000?text=White+Front",
+        side: "https://via.placeholder.com/500x500/ffffff/000000?text=White+Side",
+        back: "https://via.placeholder.com/500x500/ffffff/000000?text=White+Back"
+      },
+
+      Blue: {
+        size: "7cm",
+        material: "Blue PLA+",
+        weight: "39g",
+        front: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Blue+Front",
+        side: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Blue+Side",
+        back: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Blue+Back"
+      }
+    }
+  },
+
+  animekeychain: {
+    name: "Anime Keychain",
+    desc: "Premium anime-inspired collectible keychain.",
+    customText: false,
+
+    colours: {
+      Red: {
+        size: "8cm",
+        material: "PLA+",
+        weight: "45g",
+        front: "https://via.placeholder.com/500x500/ff0000/ffffff?text=Anime+Red+Front",
+        side: "https://via.placeholder.com/500x500/ff0000/ffffff?text=Anime+Red+Side",
+        back: "https://via.placeholder.com/500x500/ff0000/ffffff?text=Anime+Red+Back"
+      },
+
+      Blue: {
+        size: "8cm",
+        material: "PLA+",
+        weight: "45g",
+        front: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Anime+Blue+Front",
+        side: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Anime+Blue+Side",
+        back: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Anime+Blue+Back"
+      }
+    }
+  }
+};
+
+function openProduct(id){
+  currentProduct = id;
+  currentAngle = "front";
+
+  let product = products[id];
+  let colours = Object.keys(product.colours);
+
+  document.getElementById("productName").innerText = product.name;
+  document.getElementById("productDesc").innerText = product.desc;
+
+  let select = document.getElementById("colourSelect");
+  select.innerHTML = "";
+
+  colours.forEach(colour => {
+    select.innerHTML += `<option value="${colour}">${colour}</option>`;
+  });
+
+  currentColour = colours[0];
+  select.value = currentColour;
+
+  if(product.customText){
+    document.getElementById("customTextArea").style.display = "block";
+  }else{
+    document.getElementById("customTextArea").style.display = "none";
+  }
+
+  document.getElementById("customText").value = "";
+  document.getElementById("textWarning").innerText = "";
+
+  updateDetails();
+  document.getElementById("productModal").style.display = "flex";
+}
+
+function closeProduct(){
+  document.getElementById("productModal").style.display = "none";
+}
+
+function changeColour(){
+  currentColour = document.getElementById("colourSelect").value;
+  currentAngle = "front";
+  updateDetails();
+}
+
+function changeAngle(angle){
+  currentAngle = angle;
+  updateDetails();
+}
+
+function updateDetails(){
+  let product = products[currentProduct];
+  let data = product.colours[currentColour];
+
+  document.getElementById("productSize").innerText = data.size;
+  document.getElementById("productMaterial").innerText = data.material;
+  document.getElementById("productWeight").innerText = data.weight;
+
+  document.getElementById("mainImg").src = data[currentAngle];
+  document.getElementById("frontImg").src = data.front;
+  document.getElementById("sideImg").src = data.side;
+  document.getElementById("backImg").src = data.back;
+
+  if(product.customText) updateTextLimit();
+}
+
+function updateTextLimit(){
+  if(!products[currentProduct].customText) return;
+
+  let select = document.getElementById("textLength");
+  let option = select.options[select.selectedIndex];
+
+  let min = option.dataset.min;
+  let max = option.dataset.max;
+
+  document.getElementById("customText").maxLength = max;
+
+  validateTextLength();
+}
+
+function validateTextLength(){
+  if(!products[currentProduct].customText) return;
+
+  let select = document.getElementById("textLength");
+  let option = select.options[select.selectedIndex];
+
+  let min = Number(option.dataset.min);
+  let max = Number(option.dataset.max);
+  let text = document.getElementById("customText").value.trim();
+
+  if(text.length === 0){
+    document.getElementById("textWarning").innerText =
+      "Enter " + min + " to " + max + " letters.";
+  }else if(text.length < min){
+    document.getElementById("textWarning").innerText =
+      "Minimum " + min + " letters required.";
+  }else if(text.length > max){
+    document.getElementById("textWarning").innerText =
+      "Maximum " + max + " letters only.";
+  }else{
+    document.getElementById("textWarning").innerText = "";
+  }
+}
+
+function askWhatsapp(){
+  let phone = "60175819904";
+  let product = products[currentProduct];
+
+  let text = "";
+  if(product.customText){
+    text = document.getElementById("customText").value.trim();
+  }
+
+  let msg =
+    "Hi Obsidian Arc Lab, I want to ask about " +
+    product.name +
+    " in " +
+    currentColour +
+    " colour" +
+    (text ? " with text: " + text : "") +
+    ".";
+
+  window.open(
+    "https://wa.me/" + phone + "?text=" + encodeURIComponent(msg),
+    "_blank"
+  );
+}
+</script>
+
+<script src="catalogue.js"></script>
+</body>
+</html>

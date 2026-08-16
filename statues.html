@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse handcrafted 3D printed statues by Obsidian Arc Lab.">
+  <title>Statues | Obsidian Arc Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="statues.css">
+  <link rel="stylesheet" href="professional.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="statues-page">
+  <header class="navbar">
+    <a class="logo" href="index.html" aria-label="Obsidian Arc Lab home">
+      Obsidian Arc
+      <span>LAB · EST. 2026</span>
+    </a>
+
+    <nav aria-label="Main navigation">
+      <a href="index.html">HOME</a>
+      <a href="collection.html">COLLECTION</a>
+      <a href="commission.html">CONTACT</a>
+      <a class="admin-link" href="admin-login.html">ADMIN LOGIN</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="statue-hero">
+      <p class="statue-eyebrow">THE SACRED SERIES</p>
+      <h1>Divinity, shaped<br><em>layer by layer.</em></h1>
+      <p class="statue-intro">Thoughtfully printed statues for prayer spaces, meaningful gifts and refined home décor.</p>
+    </section>
+
+    <section class="statue-list" aria-label="Statue catalogue">
+      <article class="statue-card" tabindex="0" role="button" onclick="openProduct('ganesha')" onkeydown="openWithKeyboard(event, 'ganesha')">
+        <div class="statue-card__image">
+          <img src="image/Mini_Ganesha/Ganesha_Main.jpg" alt="Mini Ganesha 3D printed statue">
+          <span class="statue-card__view">VIEW DETAILS <b>↗</b></span>
+        </div>
+        <div class="statue-card__body">
+          <p>3D PRINTED STATUE</p>
+          <h2>Mini Ganesha</h2>
+          <span>Three colour finishes</span>
+        </div>
+      </article>
+
+      <article class="statue-card" tabindex="0" role="button" onclick="openProduct('anjaneya')" onkeydown="openWithKeyboard(event, 'anjaneya')">
+        <div class="statue-card__image">
+          <img src="image/hanuman/Hanuman_Main.jpg" alt="Mini Anjaneya 3D printed statue">
+          <span class="statue-card__view">VIEW DETAILS <b>↗</b></span>
+        </div>
+        <div class="statue-card__body">
+          <p>3D PRINTED STATUE</p>
+          <h2>Mini Anjaneya</h2>
+          <span>Four-angle product view</span>
+        </div>
+      </article>
+
+      <article class="statue-card" tabindex="0" role="button" onclick="openProduct('buddha')" onkeydown="openWithKeyboard(event, 'buddha')">
+        <div class="statue-card__image">
+          <img src="image/Buddha/Buddha_Gold+White-Main.jpg" alt="Mini Buddha 3D printed statue">
+          <span class="statue-card__view">VIEW DETAILS <b>↗</b></span>
+        </div>
+        <div class="statue-card__body">
+          <p>3D PRINTED STATUE</p>
+          <h2>Mini Buddha</h2>
+          <span>Gold and white finish</span>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div id="productModal" class="statue-modal" role="dialog" aria-modal="true" aria-labelledby="productName" onclick="closeOnBackdrop(event)">
+    <div class="statue-modal__box">
+      <button class="statue-modal__close" type="button" onclick="closeProduct()" aria-label="Close product details">×</button>
+
+      <div class="statue-modal__grid">
+        <div class="statue-gallery">
+          <div class="statue-gallery__main">
+            <img id="mainImg" src="" alt="Selected product view">
+            <span id="viewLabel">FRONT VIEW</span>
+          </div>
+          <div id="angleRow" class="statue-gallery__thumbs" aria-label="Product image views"></div>
+        </div>
+
+        <div class="statue-details">
+          <p class="statue-eyebrow">OBSIDIAN ARC LAB</p>
+          <h2 id="productName"></h2>
+          <p id="productDesc" class="statue-details__desc"></p>
+
+          <dl class="statue-specs">
+            <div><dt>Size</dt><dd id="productSize"></dd></div>
+            <div><dt>Material</dt><dd id="productMaterial"></dd></div>
+            <div><dt>Weight</dt><dd id="productWeight"></dd></div>
+          </dl>
+
+          <label for="colourSelect">Available finish</label>
+          <select id="colourSelect" onchange="changeColour()"></select>
+
+          <p class="statue-details__note">Pricing depends on the selected size and customisation. Ask us for a quotation.</p>
+
+          <button class="statue-whatsapp" type="button" onclick="askWhatsapp()">
+            <span>ASK ON WHATSAPP</span><b>↗</b>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="statue-footer">
+    <span>OBSIDIAN ARC LAB</span>
+    <p>Made with precision · Penang, Malaysia</p>
+  </footer>
+
+  <script src="statues.js"></script>
+  <script src="catalogue.js"></script>
+</body>
+</html>

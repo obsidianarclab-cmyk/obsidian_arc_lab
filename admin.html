@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Business Manager | Obsidian Arc Lab</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin-interesting.css">
+  <link rel="stylesheet" href="price-list.css">
+  <link rel="stylesheet" href="inventory.css">
+</head>
+<body>
+<div class="admin-shell">
+  <aside>
+    <div class="side-brand"><b>OA</b><p>OBSIDIAN ARC<span>3D PRINT STUDIO</span></p></div>
+    <nav>
+      <button class="active" data-page="overview">⌂ Overview</button>
+      <button data-page="orders">▣ Orders</button>
+      <button data-page="expenses">↗ Expenses</button>
+      <button data-page="products">◇ Price List</button>
+      <button data-page="inventory">▦ Inventory</button>
+    </nav>
+    <div class="side-quote"><span>CRAFTED WITH PURPOSE</span><p>Every layer tells a story.</p></div>
+    <button class="logout" onclick="logout()">Log out</button>
+  </aside>
+
+  <main class="admin-main">
+    <header>
+      <div><p class="eyebrow">STUDIO MANAGEMENT</p><h1 id="pageTitle">Business overview</h1><p id="todayText" class="date-line"></p></div>
+      <div class="header-actions"><span id="syncStatus" class="sync-status">Google Sheets not connected</span><button onclick="loadGoogleSheets()" class="outline">↻ Sync Sheets</button><button onclick="exportData()" class="outline">⇩ Export Excel</button></div>
+    </header>
+
+    <section id="overview" class="page active">
+      <div class="welcome-banner">
+        <div><p class="eyebrow">WELCOME BACK, VIJI</p><h2>Your studio at a glance.</h2><p>Track every custom print, cost and milestone from one beautiful workspace.</p></div>
+        <div class="banner-orbit"><span>OA</span></div>
+      </div>
+
+      <div class="stats">
+        <article><div class="stat-icon gold">RM</div><span>Total sales</span><strong id="sales">RM0.00</strong><small id="salesNote">0 orders recorded</small></article>
+        <article><div class="stat-icon rose">↗</div><span>Total expenses</span><strong id="spent">RM0.00</strong><small id="expenseNote">0 expenses recorded</small></article>
+        <article><div class="stat-icon green">◆</div><span>Estimated profit</span><strong id="profit">RM0.00</strong><small>Sales minus expenses</small></article>
+        <article><div class="stat-icon blue">◷</div><span>Open orders</span><strong id="open">0</strong><small>Need your attention</small></article>
+        <article><div class="stat-icon rose">!</div><span>Unpaid balance</span><strong id="unpaidBalance">RM0.00</strong><small id="unpaidNote">0 payments outstanding</small></article>
+        <article><div class="stat-icon gold">▦</div><span>Low-stock items</span><strong id="lowStockCount">0</strong><small>At or below minimum level</small></article>
+      </div>
+
+      <div class="status-strip">
+        <article class="pending"><i></i><div><span>Pending</span><strong id="pendingCount">0</strong></div></article>
+        <article class="progress"><i></i><div><span>In Progress</span><strong id="progressCount">0</strong></div></article>
+        <article class="done"><i></i><div><span>Completed</span><strong id="completedCount">0</strong></div></article>
+        <article class="total"><i></i><div><span>All Orders</span><strong id="totalCount">0</strong></div></article>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel chart-panel">
+          <div class="panel-title"><div><p class="eyebrow">PERFORMANCE</p><h2>Sales vs expenses</h2></div><span>Current records</span></div>
+          <div class="chart-legend"><span><i class="sales-dot"></i>Sales</span><span><i class="expense-dot"></i>Expenses</span></div>
+          <div class="bar-chart"><div class="chart-track"><div id="salesBar" class="chart-bar sales-bar"></div></div><div class="chart-track"><div id="expenseBar" class="chart-bar expense-bar"></div></div></div>
+          <div class="chart-values"><b id="chartSales">RM0.00</b><b id="chartExpenses">RM0.00</b></div>
+        </div>
+
+        <div class="panel quick-panel">
+          <div class="panel-title"><div><p class="eyebrow">SHORTCUTS</p><h2>Quick actions</h2></div></div>
+          <div class="quick-actions">
+            <button onclick="goPage('orders')"><i>＋</i><span>New order<small>Add customer request</small></span></button>
+            <button onclick="goPage('expenses')"><i>↗</i><span>Add expense<small>Record studio cost</small></span></button>
+            <button onclick="goPage('products')"><i>◇</i><span>New product<small>Set product price</small></span></button>
+            <button onclick="goPage('inventory')"><i>▦</i><span>Update stock<small>Statues, boxes and PLA</small></span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel"><div class="panel-title"><div><p class="eyebrow">LATEST ACTIVITY</p><h2>Recent orders</h2></div><button class="text-button" onclick="goPage('orders')">View all →</button></div><div id="recent"></div></div>
+    </section>
+
+    <section id="orders" class="page">
+      <div class="section-intro"><div><p class="eyebrow">ORDER WORKFLOW</p><h2>Turn ideas into finished pieces.</h2></div><span>Pending → In Progress → Completed</span></div>
+      <div class="panel"><h2>Add order</h2><form id="orderForm" class="grid"><label class="order-date-field"><span>Order date</span><input name="date" id="orderDate" type="date" required></label><input name="customer" placeholder="Customer name" required><input name="phone" placeholder="Phone"><input name="product" placeholder="Product" required><input name="quantity" type="number" value="1" min="1"><input name="amount" type="number" step="0.01" min="0" placeholder="Total RM" required><select name="status"><option>Pending</option><option>In Progress</option><option>Completed</option></select><select name="paymentStatus"><option>Not Paid</option><option>Partially Paid</option><option>Paid</option></select><input name="amountPaid" type="number" step="0.01" min="0" value="0" placeholder="Amount paid RM"><label class="order-date-field"><span>Required / delivery date</span><input name="deliveryDate" type="date"></label><select name="deliveryMethod"><option value="">Select delivery method</option><option>Pickup</option><option>Delivery</option><option>Courier</option></select><input name="trackingNumber" placeholder="Tracking number"><input name="address" class="wide-field" placeholder="Customer / delivery address"><input name="notes" class="wide-field" placeholder="Notes / special instructions"><button>Save order</button></form></div>
+      <div class="panel"><h2>All orders</h2><div id="orderList"></div></div>
+    </section>
+
+    <section id="expenses" class="page">
+      <div class="section-intro"><div><p class="eyebrow">COST CONTROL</p><h2>Know where every ringgit goes.</h2></div></div>
+      <div class="panel"><h2>Add expense</h2><form id="expenseForm" class="grid"><input name="date" type="date" required><select name="paidBy"><option>Tivi</option><option>Viji</option><option>Obsidian Arc Lab</option></select><input name="category" placeholder="Category" required><input name="description" placeholder="Description" required><input name="amount" type="number" step="0.01" placeholder="Amount RM" required><button>Save expense</button></form></div>
+      <div class="panel"><h2>All expenses</h2><div id="expenseList"></div></div>
+    </section>
+
+    <section id="products" class="page">
+      <div class="section-intro"><div><p class="eyebrow">PRIVATE PRICE BOOK</p><h2>Product Price List</h2><p class="price-subtitle">These prices are visible only in the admin page—not in your public catalogue.</p></div></div>
+      <div class="panel calculator-panel">
+        <div class="panel-title"><div><p class="eyebrow">SMART PRICING</p><h2>How much should I sell it for?</h2><p class="price-subtitle">Add every production cost and choose your preferred profit margin.</p></div></div>
+        <form id="calculatorForm" class="calculator-grid">
+          <label>Filament used (g)<input name="filamentUsed" type="number" min="0" step="0.01" value="0"></label>
+          <label>Spool price (RM)<input name="spoolPrice" type="number" min="0" step="0.01" value="70"></label>
+          <label>Spool weight (g)<input name="spoolWeight" type="number" min="1" step="1" value="1000"></label>
+          <label>Print time (hours)<input name="printHours" type="number" min="0" step="0.1" value="0"></label>
+          <label>Electricity per hour (RM)<input name="electricityRate" type="number" min="0" step="0.01" value="0.15"></label>
+          <label>Labour / design (RM)<input name="labour" type="number" min="0" step="0.01" value="0"></label>
+          <label>Packaging (RM)<input name="packaging" type="number" min="0" step="0.01" value="0"></label>
+          <label>Other cost (RM)<input name="other" type="number" min="0" step="0.01" value="0"></label>
+          <label>Desired profit margin (%)<input name="margin" type="number" min="0" max="95" step="1" value="35"></label>
+        </form>
+        <div class="calculator-results">
+          <article><span>Material cost</span><strong id="calcMaterial">RM0.00</strong></article>
+          <article><span>Total production cost</span><strong id="calcCost">RM0.00</strong></article>
+          <article class="recommended"><span>Recommended selling price</span><strong id="calcSelling">RM0.00</strong></article>
+          <article><span>Estimated profit</span><strong id="calcProfit">RM0.00</strong></article>
+        </div>
+        <button type="button" class="calculator-apply" onclick="applyCalculatedPrice()">Use this price in product form ↓</button>
+      </div>
+      <div class="pricing-summary"><article><span>Products recorded</span><strong id="pricedProductCount">0</strong></article><article><span>Average selling price</span><strong id="averagePrice">RM0.00</strong></article><article><span>Average profit</span><strong id="averageProfit">RM0.00</strong></article></div>
+      <div class="panel price-form-panel">
+        <div class="panel-title"><div><p class="eyebrow">NEW PRICE RECORD</p><h2>Add product price</h2></div></div>
+        <form id="productForm" class="price-grid">
+          <label>Product name<input name="name" placeholder="e.g. Mini Hanuman" required></label>
+          <label>Category<select name="category"><option>Statue</option><option>Custom Figurine</option><option>Photo Display</option><option>Keychain</option><option>Door Gift</option><option>Home Décor</option><option>Other</option></select></label>
+          <label>Size / height<input name="size" placeholder="e.g. 5.7 cm"></label>
+          <label>Material<select name="material" id="productMaterial"><option>PLA</option><option>PLA+</option><option>PETG</option><option>Resin</option><option>Mixed material</option><option>Other</option></select></label>
+          <label id="customMaterialWrap" class="conditional-field" hidden>Specify other material<input name="customMaterial" placeholder="Key in material name"></label>
+          <label>Colour<input name="colour" placeholder="e.g. Gold, white, black"></label>
+          <label>Printing cost (RM)<input name="printingCost" type="number" step="0.01" min="0" value="0" required></label>
+          <label>Packaging cost (RM)<input name="packagingCost" type="number" step="0.01" min="0" value="0" required></label>
+          <label>Other cost (RM)<input name="otherCost" type="number" step="0.01" min="0" value="0" required></label>
+          <label>Selling price (RM)<input name="price" type="number" step="0.01" min="0" placeholder="0.00" required></label>
+          <label class="price-notes">Notes<input name="notes" placeholder="Colour, print time or special details"></label>
+          <button>Save price record</button>
+        </form>
+        <div class="live-profit"><span>Estimated profit for this entry</span><strong id="liveProfit">RM0.00</strong></div>
+      </div>
+      <div class="panel"><div class="panel-title"><div><p class="eyebrow">SAVED PRICES</p><h2>Products and prices</h2></div></div><div id="productList"></div></div>
+    </section>
+
+    <section id="inventory" class="page">
+      <div class="section-intro"><div><p class="eyebrow">STOCK ROOM</p><h2>Inventory Control</h2><p class="price-subtitle">See exactly which statues, packaging boxes and PLA materials are available.</p></div></div>
+      <div class="pricing-summary inventory-summary"><article><span>Statues available</span><strong id="statueStock">0</strong></article><article><span>Boxes available</span><strong id="boxStock">0</strong></article><article><span>PLA available</span><strong id="plaStock">0</strong></article></div>
+      <div class="panel price-form-panel">
+        <div class="panel-title"><div><p class="eyebrow">STOCK ENTRY</p><h2>Add or update inventory</h2></div></div>
+        <form id="inventoryForm" class="price-grid">
+          <label>Stock type<select name="type" id="inventoryType" required><option>Statue</option><option>Box</option><option>PLA</option><option>Other</option></select></label>
+          <label id="customStockTypeWrap" class="conditional-field" hidden>Specify other stock type<input name="customType" placeholder="Key in stock type" autocomplete="off"></label>
+          <label>Item name<input name="name" placeholder="e.g. Mini Ganesha" required></label>
+          <label>Size<input name="size" placeholder="e.g. 15 × 15 × 15 cm"></label>
+          <label>Material / colour<input name="material" placeholder="e.g. PLA Gold"></label>
+          <label>Quantity available<input name="quantity" type="number" min="0" value="0" required></label>
+          <label>Minimum stock alert<input name="minimum" type="number" min="0" value="1"></label>
+          <label>Unit<select name="unit"><option>pcs</option><option>rolls</option><option>boxes</option><option>kg</option></select></label>
+          <label>Storage location<input name="location" placeholder="e.g. Shelf A"></label>
+          <label class="price-notes">Notes<input name="notes" placeholder="Supplier, box type or special details"></label>
+          <button>Save inventory</button>
+        </form>
+      </div>
+      <div class="panel"><div class="panel-title"><div><p class="eyebrow">AVAILABLE STOCK</p><h2>Inventory list</h2></div></div><div id="inventoryList"></div></div>
+    </section>
+  </main>
+</div>
+<script src="admin.js"></script>
+</body>
+</html>
