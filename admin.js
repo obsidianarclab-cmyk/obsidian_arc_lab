@@ -400,7 +400,19 @@ function actions(type,id){
 
 function table(headers,rows){
   if(!rows.length) return '<p class="empty">No records yet. Your next creation starts here.</p>';
-  return '<table class="data-table"><thead><tr>'+headers.map(h=>'<th>'+h+'</th>').join('')+'<th></th></tr></thead><tbody>'+rows.join('')+'</tbody></table>';
+  const mobileHeaders=[...headers,'Actions'];
+  const labelledRows=rows.map(row=>{
+    let column=0;
+    return row.replace(/<td([^>]*)>/g,(match,attrs)=>{
+      const label=String(mobileHeaders[column++]||'')
+        .replaceAll('&','&amp;')
+        .replaceAll('"','&quot;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;');
+      return `<td${attrs} data-label="${label}">`;
+    });
+  });
+  return '<table class="data-table"><thead><tr>'+headers.map(h=>'<th>'+h+'</th>').join('')+'<th>Actions</th></tr></thead><tbody>'+labelledRows.join('')+'</tbody></table>';
 }
 
 function render(){
