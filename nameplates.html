@@ -3,7 +3,11 @@
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Personalised 3D printed nameplates and QR code desk displays by Obsidian Arc Lab."><title>Personalised Nameplates | Obsidian Arc Lab</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="professional.css"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="contact-choice.css">
 </head>
 <body class="photo-display-page">
-  <header class="navbar"><a class="logo" href="index.html">Obsidian Arc Lab<span>EST. 2026</span></a><nav><a href="index.html">HOME</a><a href="collection.html">COLLECTION</a><a href="atelier.html">OUR STORY</a><a href="commission.html">CUSTOM ORDER</a><a class="admin-link" href="admin-login.html">ADMIN LOGIN</a></nav></header>
+  <header class="navbar"><a class="logo" href="index.html">Obsidian Arc Lab<span>EST. 2026</span></a><button class="mobile-nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+  <nav><a href="index.html">HOME</a><a href="collection.html">COLLECTION</a><a href="atelier.html">OUR STORY</a><a href="commission.html">CUSTOM ORDER</a><a class="admin-link" href="admin-login.html">ADMIN LOGIN</a></nav></header>
   <main>
     <section class="display-hero"><div class="display-hero__copy"><p class="small">PERSONALISED DESK COLLECTION</p><h1>Your name.<br><em>Your identity.</em></h1><p>A custom 3D nameplate designed for desks, businesses, events and gifts—with an optional functional QR code.</p><a class="btn" href="#nameplate-details">VIEW DETAILS</a></div><div class="display-hero__image"><img src="qr-nameplate-front.jpg" alt="Personalised nameplate with QR code"></div></section>
     <section id="nameplate-details" class="display-product"><div class="display-gallery"><div class="display-gallery__main"><img id="displayMainImage" src="qr-nameplate-front.jpg" alt="Custom nameplate front view"></div><div class="display-gallery__thumbs"><button class="is-active" type="button" onclick="changeDisplayImage(this,'qr-nameplate-front.jpg','Nameplate front view')"><img src="qr-nameplate-front.jpg" alt="Front view"><span>FRONT</span></button><button type="button" onclick="changeDisplayImage(this,'qr-nameplate-side.jpg','Nameplate side view')"><img src="qr-nameplate-side.jpg" alt="Side view"><span>SIDE</span></button><button type="button" onclick="changeDisplayImage(this,'qr-nameplate-angle.jpg','Nameplate angle view')"><img src="qr-nameplate-angle.jpg" alt="Angle view"><span>ANGLE</span></button></div></div>
@@ -13,4 +17,5 @@
   <footer class="footer"><div class="footer-logo"><h2>Obsidian Arc Lab</h2><p>EST. 2026</p></div><div class="footer-links"><a href="collection.html">COLLECTION</a><a href="atelier.html">OUR STORY</a><a href="commission.html">CUSTOM ORDER</a></div><div class="footer-copy">© 2026 Obsidian Arc Lab — Built Layer by Layer</div></footer>
   <script>function changeDisplayImage(button,src,alt){const image=document.getElementById('displayMainImage');image.src=src;image.alt=alt;document.querySelectorAll('.display-gallery__thumbs button').forEach(item=>item.classList.remove('is-active'));button.classList.add('is-active')}</script><script src="catalogue.js"></script>
 <script src="contact-choice.js"></script>
+<script src="mobile-nav.js"></script>
 </body></html>
