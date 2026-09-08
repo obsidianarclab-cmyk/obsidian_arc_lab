@@ -4,14 +4,68 @@ const KEY='obsidian_arc_records_v1';
 const SHEETS_WEB_APP_URL='https://script.google.com/macros/s/AKfycbwoJcI043jIbkAdV5OUcQg7lBp4U5rMl5jXdmKVfIWOovNSncHYZXmIiQODUpqval0m/exec';
 const SHEETS_API_KEY='Obsidian_Arc_Lab_Record';
 const sheetsEnabled=()=>SHEETS_WEB_APP_URL.startsWith('https://script.google.com/macros/s/')&&SHEETS_WEB_APP_URL.endsWith('/exec');
-let data=JSON.parse(localStorage.getItem(KEY)||'{"orders":[],"expenses":[],"products":[],"inventory":[]}');
+let data=JSON.parse(localStorage.getItem(KEY)||'{"orders":[],"expenses":[],"products":[],"inventory":[],"work":[],"settings":{}}');
 data.orders=data.orders||[];
-data.orders.forEach(x=>{x.paymentStatus=x.paymentStatus||'Not Paid';x.amountPaid=x.amountPaid??(x.paymentStatus==='Paid'?x.amount:0);x.deliveryMethod=x.deliveryMethod||''});
+data.orders.forEach(x=>{x.paymentStatus=x.paymentStatus||'Not Paid';x.amountPaid=x.amountPaid??(x.paymentStatus==='Paid'?x.amount:0);x.deliveryMethod=x.deliveryMethod||'';x.platform=x.platform||''});
 data.expenses=data.expenses||[];
 data.expenses.forEach(x=>{if(x.paidBy==='Company')x.paidBy='Obsidian Arc Lab'});
 data.products=data.products||[];
+data.work=Array.isArray(data.work)?data.work:[];
+data.work.forEach(item=>{
+  if(!item.created){
+    const idDate=Number(item.id);
+    item.created=item.updated||(Number.isFinite(idDate)&&idDate>0?new Date(idDate).toISOString():new Date().toISOString());
+  }
+  delete item.dueDate;
+});
+data.settings=(data.settings&&typeof data.settings==='object'&&!Array.isArray(data.settings))?data.settings:{};
+data.settings.companyBalance=Number(data.settings.companyBalance||0);
+data.settings.companyBalanceNote=data.settings.companyBalanceNote||'';
+data.settings.companyBalanceUpdated=data.settings.companyBalanceUpdated||'';
 data.inventory=Array.isArray(data.inventory)?data.inventory:[{id:1723612800000,updated:'2026-08-14T00:00:00.000Z',type:'Statue',name:'Mini Ganesha',size:'15 × 15 × 15 cm',material:'PLA',quantity:'3',minimum:'1',unit:'pcs',location:'',notes:''}];
+localStorage.setItem(KEY,JSON.stringify(data));
 const rm=n=>'RM'+Number(n||0).toFixed(2);
+const MY_TIME_ZONE='Asia/Kuala_Lumpur';
+
+function formatMYDate(value){
+  if(value===undefined||value===null||value==='') return '-';
+  const text=String(value).trim();
+  const dateOnly=text.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(dateOnly) return `${dateOnly[3]}/${dateOnly[2]}/${dateOnly[1]}`;
+  const date=new Date(text);
+  if(Number.isNaN(date.getTime())) return text;
+  return new Intl.DateTimeFormat('en-GB',{timeZone:MY_TIME_ZONE,day:'2-digit',month:'2-digit',year:'numeric'}).format(date);
+}
+
+function formatMYDateTime(value){
+  if(value===undefined||value===null||value==='') return '-';
+  const text=String(value).trim();
+  const dateOnly=text.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(dateOnly) return `${dateOnly[3]}/${dateOnly[2]}/${dateOnly[1]}`;
+  const date=new Date(text);
+  if(Number.isNaN(date.getTime())) return text;
+  return new Intl.DateTimeFormat('en-MY',{
+    timeZone:MY_TIME_ZONE,day:'2-digit',month:'2-digit',year:'numeric',
+    hour:'2-digit',minute:'2-digit',hour12:true
+  }).format(date);
+}
+
+function toDateInputValue(value){
+  if(value===undefined||value===null||value==='') return '';
+  const text=String(value).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const date=new Date(text);
+  if(Number.isNaN(date.getTime())) return '';
+  const parts=new Intl.DateTimeFormat('en-CA',{timeZone:MY_TIME_ZONE,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+  const get=type=>parts.find(part=>part.type===type)?.value||'';
+  return `${get('year')}-${get('month')}-${get('day')}`;
+}
+
+function setWorkDateDisplay(value=new Date().toISOString()){
+  const field=document.getElementById('workCurrentDate');
+  if(field)field.value=formatMYDate(value);
+}
+
 const save=()=>{localStorage.setItem(KEY,JSON.stringify(data));render()};
 let editing={type:null,id:null};
 
@@ -43,8 +97,12 @@ async function loadGoogleSheets(){
     const firstUploads=[];
     ['orders','expenses','products','inventory'].forEach(type=>{
       const remote=Array.isArray(result.data[type])?result.data[type]:[];
-      if(remote.length)data[type]=remote;
-      else if(data[type].length)firstUploads.push(sheetsRequest({action:'replaceAll',type,records:data[type]}));
+      if(remote.length){
+        const localById=new Map((data[type]||[]).map(item=>[String(item.id),item]));
+        data[type]=remote.map(item=>({...localById.get(String(item.id)),...item}));
+      }else if(data[type].length){
+        firstUploads.push(sheetsRequest({action:'replaceAll',type,records:data[type]}));
+      }
     });
     await Promise.all(firstUploads);
     localStorage.setItem(KEY,JSON.stringify(data));render();setSyncStatus(firstUploads.length?'Connected — existing records uploaded':'Connected to Google Sheets');
@@ -67,7 +125,7 @@ document.querySelectorAll('nav [data-page]').forEach(button=>{
     document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
     button.classList.add('active');
     document.getElementById(button.dataset.page).classList.add('active');
-    document.getElementById('pageTitle').textContent={overview:'Business overview',orders:'Customer orders',expenses:'Business expenses',products:'Product Price List',inventory:'Inventory Control'}[button.dataset.page];
+    document.getElementById('pageTitle').textContent={overview:'Business overview',orders:'Customer orders',expenses:'Business expenses',products:'Product Price List',inventory:'Inventory Control',work:'Work & Notes'}[button.dataset.page];
   };
 });
 
@@ -84,6 +142,9 @@ function currentRecord(type){return editing.type===type?data[type].find(x=>x.id=
 document.getElementById('orderForm').onsubmit=e=>{
   e.preventDefault();
   const order=formObject(e.target);
+  if(order.platform==='Other') order.platform=order.customPlatform.trim();
+  delete order.customPlatform;
+  if(!order.platform){alert('Please select or key in where the order came from.');return}
   const existing=currentRecord('orders');
   order.id=existing?.id||Date.now();
   order.created=existing?.created||new Date().toISOString();
@@ -130,6 +191,43 @@ document.getElementById('inventoryForm').onsubmit=e=>{
   storeRecord('inventory',item);
   syncRecord('inventory',item);
   resetForm('inventory');
+  save();
+};
+
+document.getElementById('workForm').onsubmit=e=>{
+  e.preventDefault();
+  const item=formObject(e.target);
+  if(item.category==='Other') item.category=item.customCategory.trim();
+  delete item.customCategory;
+  if(!item.category){alert('Please key in the work category.');return}
+  const existing=currentRecord('work');
+  item.id=existing?.id||Date.now();
+  item.created=existing?.created||new Date().toISOString();
+  item.updated=new Date().toISOString();
+  storeRecord('work',item);
+  resetForm('work');
+  save();
+};
+
+function openBalanceEditor(){
+  const modal=document.getElementById('balanceModal');
+  document.getElementById('balanceInput').value=Number(data.settings.companyBalance||0).toFixed(2);
+  document.getElementById('balanceNoteInput').value=data.settings.companyBalanceNote||'';
+  modal.hidden=false;
+  setTimeout(()=>document.getElementById('balanceInput').focus(),0);
+}
+
+function closeBalanceEditor(){document.getElementById('balanceModal').hidden=true}
+
+document.getElementById('balanceModal').addEventListener('click',e=>{if(e.target.id==='balanceModal')closeBalanceEditor()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeBalanceEditor()});
+document.getElementById('balanceForm').onsubmit=e=>{
+  e.preventDefault();
+  const values=formObject(e.target);
+  data.settings.companyBalance=Math.max(Number(values.balance||0),0);
+  data.settings.companyBalanceNote=values.note.trim();
+  data.settings.companyBalanceUpdated=new Date().toISOString();
+  closeBalanceEditor();
   save();
 };
 
@@ -193,20 +291,26 @@ function toggleOther(selectId,wrapId,inputName){
 
 document.getElementById('inventoryType').addEventListener('change',()=>toggleOther('inventoryType','customStockTypeWrap','customType'));
 document.getElementById('productMaterial').addEventListener('change',()=>toggleOther('productMaterial','customMaterialWrap','customMaterial'));
+document.getElementById('orderPlatform').addEventListener('change',()=>toggleOther('orderPlatform','customPlatformWrap','customPlatform'));
+document.getElementById('workCategory').addEventListener('change',()=>toggleOther('workCategory','customWorkCategoryWrap','customCategory'));
 toggleOther('inventoryType','customStockTypeWrap','customType');
 toggleOther('productMaterial','customMaterialWrap','customMaterial');
+toggleOther('orderPlatform','customPlatformWrap','customPlatform');
+toggleOther('workCategory','customWorkCategoryWrap','customCategory');
+setWorkDateDisplay();
 
 const formSettings={
   orders:{form:'orderForm',page:'orders',label:'Save order',update:'Update order'},
   expenses:{form:'expenseForm',page:'expenses',label:'Save expense',update:'Update expense'},
   products:{form:'productForm',page:'products',label:'Save price record',update:'Update price record'},
-  inventory:{form:'inventoryForm',page:'inventory',label:'Save inventory',update:'Update inventory'}
+  inventory:{form:'inventoryForm',page:'inventory',label:'Save inventory',update:'Update inventory'},
+  work:{form:'workForm',page:'work',label:'Save work item',update:'Update work item'}
 };
 
 function resetForm(type){
   const settings=formSettings[type],form=document.getElementById(settings.form);
   form.reset();
-  if(type==='orders') form.elements.namedItem('quantity').value=1;
+  if(type==='orders'){form.elements.namedItem('quantity').value=1;form.elements.namedItem('amountPaid').value=0;form.elements.namedItem('platform').value='';toggleOther('orderPlatform','customPlatformWrap','customPlatform');}
   if(type==='products'){
     form.elements.namedItem('printingCost').value=0;form.elements.namedItem('packagingCost').value=0;form.elements.namedItem('otherCost').value=0;
     toggleOther('productMaterial','customMaterialWrap','customMaterial');updateLiveProfit();
@@ -214,6 +318,11 @@ function resetForm(type){
   if(type==='inventory'){
     form.elements.namedItem('quantity').value=0;form.elements.namedItem('minimum').value=1;
     toggleOther('inventoryType','customStockTypeWrap','customType');
+  }
+  if(type==='work'){
+    form.elements.namedItem('priority').value='Normal';form.elements.namedItem('status').value='Pending';form.elements.namedItem('category').value='Business Task';
+    toggleOther('workCategory','customWorkCategoryWrap','customCategory');
+    setWorkDateDisplay();
   }
   form.querySelector('button:not([type="button"])').textContent=settings.label;
   form.querySelector('.cancel-edit')?.remove();
@@ -226,8 +335,20 @@ function editRecord(type,id){
   goPage(settings.page);
   const form=document.getElementById(settings.form);
   form.reset();
-  [...form.elements].forEach(field=>{if(field.name&&record[field.name]!==undefined)field.value=record[field.name]});
-  if(type==='orders') form.elements.namedItem('paymentStatus').value=record.paymentStatus||'Not Paid';
+  [...form.elements].forEach(field=>{
+    if(field.name&&record[field.name]!==undefined){
+      field.value=field.type==='date'?toDateInputValue(record[field.name]):record[field.name];
+    }
+  });
+  if(type==='orders'){
+    form.elements.namedItem('paymentStatus').value=record.paymentStatus||'Not Paid';
+    const platform=form.elements.namedItem('platform'),customPlatform=form.elements.namedItem('customPlatform');
+    const known=[...platform.options].some(option=>option.value===record.platform);
+    if(record.platform&&!known){platform.value='Other';customPlatform.value=record.platform}
+    else platform.value=record.platform||'';
+    toggleOther('orderPlatform','customPlatformWrap','customPlatform');
+    if(platform.value==='Other')customPlatform.value=record.platform||'';
+  }
   if(type==='products'){
     const material=form.elements.namedItem('material'),customMaterial=form.elements.namedItem('customMaterial');
     const known=[...material.options].some(option=>option.value===record.material);
@@ -240,6 +361,14 @@ function editRecord(type,id){
     if(!known){stockType.value='Other';customType.value=record.type||''}
     toggleOther('inventoryType','customStockTypeWrap','customType');
   }
+  if(type==='work'){
+    const category=form.elements.namedItem('category'),customCategory=form.elements.namedItem('customCategory');
+    const known=[...category.options].some(option=>option.value===record.category);
+    if(!known){category.value='Other';customCategory.value=record.category||''}
+    toggleOther('workCategory','customWorkCategoryWrap','customCategory');
+    if(category.value==='Other')customCategory.value=record.category||'';
+    setWorkDateDisplay(record.created||record.updated);
+  }
   editing={type,id};
   form.querySelector('button:not([type="button"])').textContent=settings.update;
   if(!form.querySelector('.cancel-edit')){
@@ -251,12 +380,23 @@ function editRecord(type,id){
 function del(type,id){
   if(confirm('Delete this record?')){
     data[type]=data[type].filter(x=>x.id!==id);
-    sheetsRequest({action:'delete',type,id}).then(()=>setSyncStatus('Deleted from Google Sheets')).catch(error=>setSyncStatus(error.message,true));
+    if(['orders','expenses','products','inventory'].includes(type)){
+      sheetsRequest({action:'delete',type,id}).then(()=>setSyncStatus('Deleted from Google Sheets')).catch(error=>setSyncStatus(error.message,true));
+    }
     save();
   }
 }
 
-function actions(type,id){return `<div class="record-actions"><button class="edit" onclick="editRecord('${type}',${id})">Edit</button><button class="delete" onclick="del('${type}',${id})">Delete</button></div>`}
+function markWorkDone(id){
+  const item=data.work.find(x=>x.id===id);
+  if(!item)return;
+  item.status='Done';item.updated=new Date().toISOString();save();
+}
+
+function actions(type,id){
+  const done=type==='work'?`<button class="done-action" onclick="markWorkDone(${id})">✓ Done</button>`:'';
+  return `<div class="record-actions">${done}<button class="edit" onclick="editRecord('${type}',${id})">Edit</button><button class="delete" onclick="del('${type}',${id})">Delete</button></div>`
+}
 
 function table(headers,rows){
   if(!rows.length) return '<p class="empty">No records yet. Your next creation starts here.</p>';
@@ -272,11 +412,18 @@ function render(){
   const balanceFor=o=>Math.max(Number(o.amount||0)-Number(o.amountPaid||0),0);
   const unpaidOrders=data.orders.filter(o=>balanceFor(o)>0);
   const lowItems=data.inventory.filter(x=>Number(x.quantity||0)<=Number(x.minimum||0));
+  const workPending=data.work.filter(x=>x.status==='Pending').length;
+  const workProgress=data.work.filter(x=>x.status==='In Progress').length;
+  const openWork=workPending+workProgress;
 
   document.getElementById('sales').textContent=rm(sales);
   document.getElementById('spent').textContent=rm(spent);
   document.getElementById('profit').textContent=rm(sales-spent);
   document.getElementById('open').textContent=pending+progress;
+  document.getElementById('companyBalance').textContent=rm(data.settings.companyBalance);
+  const balanceDetail=data.settings.companyBalanceNote||'Manual cash / bank balance';
+  document.getElementById('companyBalanceNote').textContent=data.settings.companyBalanceUpdated?`${balanceDetail} · Updated ${formatMYDate(data.settings.companyBalanceUpdated)}`:balanceDetail;
+  document.getElementById('workPending').textContent=openWork;
   document.getElementById('salesNote').textContent=`${data.orders.length} orders recorded`;
   document.getElementById('expenseNote').textContent=`${data.expenses.length} expenses recorded`;
   document.getElementById('unpaidBalance').textContent=rm(unpaidOrders.reduce((sum,o)=>sum+balanceFor(o),0));
@@ -293,11 +440,11 @@ function render(){
   document.getElementById('salesBar').style.width=(sales/max*100)+'%';
   document.getElementById('expenseBar').style.width=(spent/max*100)+'%';
 
-  const orderRows=data.orders.map(o=>{const delivery=[o.deliveryMethod,o.deliveryDate,o.trackingNumber].filter(Boolean).join(' · ');return `<tr><td>${o.date||(o.created?o.created.slice(0,10):'-')}</td><td><strong>${o.customer}</strong><small>${o.phone||''}</small></td><td>${o.product}<small>${o.notes||''}</small></td><td>${o.quantity}</td><td><span class="badge ${o.status.toLowerCase().replaceAll(' ','-')}">${o.status}</span></td><td><span class="payment-badge ${o.paymentStatus.toLowerCase().replaceAll(' ','-')}">${o.paymentStatus}</span><small>Paid ${rm(o.amountPaid)} · Balance ${rm(balanceFor(o))}</small></td><td>${delivery||'-'}<small>${o.address||''}</small></td><td class="money">${rm(o.amount)}</td><td>${actions('orders',o.id)}</td></tr>`});
-  document.getElementById('orderList').innerHTML=table(['Order date','Customer','Product','Qty','Status','Payment','Delivery','Total'],orderRows);
-  document.getElementById('recent').innerHTML=table(['Order date','Customer','Product','Qty','Status','Payment','Delivery','Total'],orderRows.slice(0,5));
+  const orderRows=data.orders.map(o=>{const delivery=[o.deliveryMethod,o.deliveryDate?formatMYDate(o.deliveryDate):'',o.trackingNumber].filter(Boolean).join(' · ');return `<tr><td>${formatMYDate(o.date||o.created)}</td><td><strong>${o.customer}</strong><small>${o.phone||''}</small></td><td>${o.platform||'-'}</td><td>${o.product}<small>${o.notes||''}</small></td><td>${o.quantity}</td><td><span class="badge ${o.status.toLowerCase().replaceAll(' ','-')}">${o.status}</span></td><td><span class="payment-badge ${o.paymentStatus.toLowerCase().replaceAll(' ','-')}">${o.paymentStatus}</span><small>Paid ${rm(o.amountPaid)} · Balance ${rm(balanceFor(o))}</small></td><td>${delivery||'-'}<small>${o.address||''}</small></td><td class="money">${rm(o.amount)}</td><td>${actions('orders',o.id)}</td></tr>`});
+  document.getElementById('orderList').innerHTML=table(['Order date','Customer','Order from','Product','Qty','Status','Payment','Delivery','Total'],orderRows);
+  document.getElementById('recent').innerHTML=table(['Order date','Customer','Order from','Product','Qty','Status','Payment','Delivery','Total'],orderRows.slice(0,5));
 
-  const expenseRows=data.expenses.map(x=>`<tr><td>${x.date}</td><td>${x.paidBy}</td><td>${x.category}</td><td>${x.description}</td><td class="money">${rm(x.amount)}</td><td>${actions('expenses',x.id)}</td></tr>`);
+  const expenseRows=data.expenses.map(x=>`<tr><td>${formatMYDate(x.date)}</td><td>${x.paidBy}</td><td>${x.category}</td><td>${x.description}</td><td class="money">${rm(x.amount)}</td><td>${actions('expenses',x.id)}</td></tr>`);
   document.getElementById('expenseList').innerHTML=table(['Date','Used by','Category','Description','Amount'],expenseRows);
 
   const totalPrices=data.products.reduce((sum,p)=>sum+Number(p.price||0),0);
@@ -314,19 +461,28 @@ function render(){
   document.getElementById('plaStock').textContent=stockTotal('PLA');
   const inventoryRows=data.inventory.map(x=>{const low=Number(x.quantity||0)<=Number(x.minimum||0),typeClass=['Statue','Box','PLA'].includes(x.type)?x.type.toLowerCase():'other';return `<tr><td><span class="stock-type ${typeClass}">${x.type}</span></td><td><strong>${x.name}</strong><small>${x.notes||''}</small></td><td>${x.size||'-'}</td><td>${x.material||'-'}</td><td><strong class="${low?'low-stock':''}">${x.quantity} ${x.unit||''}</strong></td><td>${x.location||'-'}</td><td>${low?'<span class="stock-alert">Low stock</span>':'<span class="stock-ok">Available</span>'}</td><td>${actions('inventory',x.id)}</td></tr>`});
   document.getElementById('inventoryList').innerHTML=table(['Type','Item','Size','Material / colour','Available','Location','Status'],inventoryRows);
+
+  document.getElementById('workPendingPage').textContent=workPending;
+  document.getElementById('workProgressPage').textContent=workProgress;
+  document.getElementById('workBuyPage').textContent=data.work.filter(x=>x.category==='Need to Buy'&&x.status!=='Done').length;
+  document.getElementById('workWebsitePage').textContent=data.work.filter(x=>x.category==='Website Update'&&x.status!=='Done').length;
+  const priorityClass=value=>String(value||'Normal').toLowerCase().replaceAll(' ','-');
+  const workRows=data.work.map(x=>{const statusClass=x.status==='Done'?'completed':x.status.toLowerCase().replaceAll(' ','-');return `<tr><td><span class="work-category">${x.category}</span></td><td><strong>${x.title}</strong><small>${x.notes||''}</small></td><td><span class="priority-badge ${priorityClass(x.priority)}">${x.priority||'Normal'}</span></td><td><span class="badge ${statusClass}">${x.status}</span></td><td>${formatMYDate(x.created||x.updated)}</td><td>${actions('work',x.id)}</td></tr>`});
+  document.getElementById('workList').innerHTML=table(['Category','Task / note','Priority','Status','Date added'],workRows);
 }
 
 function exportData(){
   const esc=value=>'"'+String(value??'').replaceAll('"','""')+'"';
   const section=(name,items)=>{
     if(!items.length) return name+'\nNo records\n';
-    const keys=Object.keys(items[0]);
+    const keys=[...new Set(items.flatMap(item=>Object.keys(item)))];
     return name+'\n'+keys.map(esc).join(',')+'\n'+items.map(x=>keys.map(k=>esc(x[k])).join(',')).join('\n')+'\n';
   };
-  const blob=new Blob(['\ufeff'+section('ORDERS',data.orders)+section('EXPENSES',data.expenses)+section('PRODUCTS',data.products)+section('INVENTORY',data.inventory)],{type:'text/csv'});
+  const balanceExport=[{balance:data.settings.companyBalance,note:data.settings.companyBalanceNote,updated:data.settings.companyBalanceUpdated}];
+  const blob=new Blob(['\ufeff'+section('ORDERS',data.orders)+section('EXPENSES',data.expenses)+section('PRODUCTS',data.products)+section('INVENTORY',data.inventory)+section('WORK & NOTES',data.work)+section('COMPANY BALANCE',balanceExport)],{type:'text/csv'});
   const link=document.createElement('a');
   link.href=URL.createObjectURL(blob);
-  link.download='obsidian-arc-business.csv';
+  link.download='obsidian-arc-lab-business.csv';
   link.click();
   URL.revokeObjectURL(link.href);
 }

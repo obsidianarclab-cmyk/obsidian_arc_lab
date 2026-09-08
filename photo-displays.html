@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Custom 3D layered photo displays by Obsidian Arc Lab, available with a personalised name base.">
+  <title>Custom 3D Photo Displays | Obsidian Arc Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="professional.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="contact-choice.css">
+</head>
+<body class="photo-display-page">
+  <header class="navbar">
+    <a class="logo" href="index.html" aria-label="Obsidian Arc Lab home">Obsidian Arc Lab<span>EST. 2026</span></a>
+    <nav aria-label="Main navigation"><a href="index.html">HOME</a><a href="collection.html">COLLECTION</a><a href="atelier.html">OUR STORY</a><a href="commission.html">CUSTOM ORDER</a><a class="admin-link" href="admin-login.html">ADMIN LOGIN</a></nav>
+  </header>
+
+  <main>
+    <section class="display-hero">
+      <div class="display-hero__copy">
+        <p class="small">CUSTOM PHOTO COLLECTION</p>
+        <h1>Your moments,<br><em>shaped in 3D.</em></h1>
+        <p>Turn a favourite person, family, pet, character, car or memory into a detailed layered display—made especially for your space.</p>
+        <a class="btn" href="#display-details">VIEW DETAILS</a>
+      </div>
+      <div class="display-hero__image"><img src="cr7-photo-display-white.jpg" alt="Cristiano Ronaldo custom 3D photo display"></div>
+    </section>
+
+    <section id="display-details" class="display-product">
+      <div class="display-gallery">
+        <div class="display-gallery__main"><img id="displayMainImage" src="cr7-photo-display-gold.jpg" alt="Custom 3D photo display product view"></div>
+        <div class="display-gallery__thumbs">
+          <button class="is-active" type="button" onclick="changeDisplayImage(this,'cr7-photo-display-gold.jpg','Custom 3D photo display view 1')"><img src="cr7-photo-display-gold.jpg" alt="Custom 3D photo display view 1"></button>
+          <button type="button" onclick="changeDisplayImage(this,'cr7-photo-display-white.jpg','Custom 3D photo display view 2')"><img src="cr7-photo-display-white.jpg" alt="Custom 3D photo display view 2"></button>
+          <button type="button" onclick="changeDisplayImage(this,'custom-photo-display-guide.jpg','Product options and size guide')"><img src="custom-photo-display-guide.jpg" alt="Options and size guide"><span>SIZE GUIDE</span></button>
+        </div>
+      </div>
+
+      <div class="display-details">
+        <p class="small">MADE TO ORDER</p>
+        <h2>Custom 3D Photo Display</h2>
+        <p class="display-lead">A lightweight, detailed 3D art panel made from your selected image. Choose the panel only or a ready-to-display complete set with a personalised name base.</p>
+
+        <div class="display-options">
+          <article><span>OPTION 01</span><h3>3D Art Panel Only</h3><p>Upper custom-designed 3D art piece.</p></article>
+          <article><span>OPTION 02</span><h3>Complete Display Set</h3><p>3D art panel with a personalised base or holder.</p></article>
+        </div>
+
+        <div class="display-sizes">
+          <div><span>SMALL</span><strong>12 × 9.6 cm</strong></div>
+          <div><span>MEDIUM</span><strong>15 × 12 cm</strong></div>
+          <div><span>LARGE</span><strong>20 × 16 cm</strong></div>
+        </div>
+
+        <ul class="display-features"><li>Custom photo or design</li><li>Premium detailed finish</li><li>Ideal for gifts and collections</li><li>Personalised base text available</li></ul>
+        <a class="btn display-whatsapp" target="_blank" rel="noopener" href="https://wa.me/60103855248?text=Hello%20Obsidian%20Arc%20Lab%2C%20I%20would%20like%20to%20order%20a%20Custom%203D%20Photo%20Display.">ENQUIRE ON WHATSAPP</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="footer-logo"><h2>Obsidian Arc Lab</h2><p>EST. 2026</p></div><div class="footer-links"><a href="collection.html">COLLECTION</a><a href="atelier.html">OUR STORY</a><a href="commission.html">CUSTOM ORDER</a></div><div class="footer-copy">© 2026 Obsidian Arc Lab — Built Layer by Layer</div></footer>
+  <script>function changeDisplayImage(button,src,alt){document.getElementById('displayMainImage').src=src;document.getElementById('displayMainImage').alt=alt;document.querySelectorAll('.display-gallery__thumbs button').forEach(item=>item.classList.remove('is-active'));button.classList.add('is-active')}</script>
+  <script src="catalogue.js"></script>
+<script src="contact-choice.js"></script>
+</body>
+</html>

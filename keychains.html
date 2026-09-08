@@ -1,308 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Keychains | Obsidian Arc Lab</title>
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="professional.css">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Personalised 3D printed keychains and name tags by Obsidian Arc Lab.">
+  <title>Keychains | Obsidian Arc Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="statues.css">
+  <link rel="stylesheet" href="keychains.css">
+  <link rel="stylesheet" href="professional.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="contact-choice.css">
 </head>
 
-<body class="statue-page">
+<body class="statues-page keychains-page">
+  <header class="navbar">
+    <a class="logo" href="index.html" aria-label="Obsidian Arc Lab home">
+      Obsidian Arc Lab
+      <span>EST. 2026</span>
+    </a>
 
-<header class="navbar">
-  <div class="logo">
-    Obsidian Arc<br>
-    <span>LAB · EST. 2026</span>
-  </div>
+    <nav aria-label="Main navigation">
+      <a href="index.html">HOME</a>
+      <a href="collection.html">COLLECTION</a>
+      <a href="atelier.html">OUR STORY</a>
+      <a href="commission.html">CUSTOM ORDER</a>
+      <a class="admin-link" href="admin-login.html">ADMIN LOGIN</a>
+    </nav>
+  </header>
 
-  <nav>
-    <a href="index.html">HOME</a>
-    <a href="collection.html">COLLECTION</a>
-    <a class="admin-link" href="admin-login.html">ADMIN LOGIN</a>
-  </nav>
-</header>
+  <main>
+    <section class="statue-hero keychain-hero">
+      <p class="statue-eyebrow">PERSONALISED COLLECTION</p>
+      <h1>Small detail.<br><em>Made yours.</em></h1>
+      <p class="statue-intro">Custom 3D printed name tags designed with your initial, name and preferred colour combination.</p>
+    </section>
 
-<section class="statue-hero">
-  <p class="small">— CUSTOM ENGRAVED COLLECTION</p>
-  <h1>Keychains Collection</h1>
-  <p>Choose keychain, colour, text length and custom name.</p>
-</section>
-
-<section class="statue-list">
-
-  <div class="statue-thumb" onclick="openProduct('namekeychain')">
-    <img src="https://via.placeholder.com/500x500/d4af37/000000?text=Name+Keychain">
-    <h2>Custom Name Keychain</h2>
-  </div>
-
-  <div class="statue-thumb" onclick="openProduct('animekeychain')">
-    <img src="https://via.placeholder.com/500x500/111111/d4af37?text=Anime+Keychain">
-    <h2>Anime Keychain</h2>
-  </div>
-
-</section>
-
-<div id="productModal" class="modal">
-  <div class="modal-box">
-
-    <button class="close-btn" onclick="closeProduct()">×</button>
-
-    <div class="modal-grid">
-
-      <div>
-        <img id="mainImg" class="main-product-img">
-
-        <div class="angle-row">
-          <img id="frontImg" onclick="changeAngle('front')">
-          <img id="sideImg" onclick="changeAngle('side')">
-          <img id="backImg" onclick="changeAngle('back')">
+    <section class="statue-list keychain-list" aria-label="Keychain catalogue">
+      <article class="statue-card keychain-card" tabindex="0" role="button" onclick="openProduct()" onkeydown="openWithKeyboard(event)">
+        <div class="statue-card__image keychain-card__image">
+          <img src="custom-initial-tag-t-clean.jpg" alt="Custom initial name tag with letter T and personalised name">
+          <span class="statue-card__view">VIEW DETAILS <b>↗</b></span>
         </div>
-      </div>
+        <div class="statue-card__body">
+          <p>PERSONALISED 3D NAME TAG</p>
+          <h2>Custom Initial Name Tag</h2>
+          <span>7 cm · Custom text &amp; colour</span>
+        </div>
+      </article>
+    </section>
+  </main>
 
-      <div class="detail-info">
-        <p class="small">OBSIDIAN ARC LAB</p>
-        <h2 id="productName"></h2>
+  <div id="productModal" class="statue-modal" role="dialog" aria-modal="true" aria-labelledby="productName" onclick="closeOnBackdrop(event)">
+    <div class="statue-modal__box">
+      <button class="statue-modal__close" type="button" onclick="closeProduct()" aria-label="Close product details">×</button>
 
-        <p><b>Size:</b> <span id="productSize"></span></p>
-        <p><b>Material:</b> <span id="productMaterial"></span></p>
-        <p><b>Weight:</b> <span id="productWeight"></span></p>
-        <p id="productDesc"></p>
+      <div class="statue-modal__grid">
+        <div class="statue-gallery">
+          <div class="statue-gallery__main keychain-gallery__main">
+            <img id="mainImg" src="custom-initial-tag-t-clean.jpg" alt="Custom initial name tag product view">
+            <span id="viewLabel">T DESIGN</span>
+          </div>
 
-        <label>Choose Colour</label>
-        <select id="colourSelect" onchange="changeColour()"></select>
-
-        <div id="customTextArea">
-          <label>Choose Text Length</label>
-          <select id="textLength" onchange="updateTextLimit()">
-            <option value="short" data-min="1" data-max="6">1 - 6 letters</option>
-            <option value="medium" data-min="7" data-max="9">7 - 9 letters</option>
-            <option value="long" data-min="10" data-max="16">10 - 16 letters</option>
-          </select>
-
-          <label>Custom Name / Text</label>
-          <input
-            type="text"
-            id="customText"
-            placeholder="Enter custom name"
-            maxlength="6"
-            oninput="validateTextLength()"
-          >
-
-          <p id="textWarning" class="warning-text"></p>
+          <div id="angleRow" class="statue-gallery__thumbs keychain-thumbs" aria-label="Product image views">
+            <button type="button" class="is-active" onclick="changeAngle(0)" aria-label="Show T design">
+              <img src="custom-initial-tag-t-clean.jpg" alt="Custom initial name tag T design">
+            </button>
+            <button type="button" onclick="changeAngle(1)" aria-label="Show N design">
+              <img src="custom-initial-tag-n-clean.jpg" alt="Custom initial name tag N design">
+            </button>
+          </div>
         </div>
 
-        <button class="whatsapp-btn" onclick="askWhatsapp()">ASK ON WHATSAPP</button>
-      </div>
+        <div class="statue-details keychain-details">
+          <p class="statue-eyebrow">OBSIDIAN ARC LAB</p>
+          <h2 id="productName">Custom Initial Name Tag</h2>
+          <p class="statue-details__desc">Personalised round tag with a bold initial, handwritten-style name and premium two-colour 3D printed finish.</p>
 
+          <dl class="statue-specs">
+            <div><dt>Size</dt><dd>7 cm</dd></div>
+            <div><dt>Material</dt><dd>PLA</dd></div>
+            <div><dt>Weight</dt><dd>Approx. 40 g</dd></div>
+          </dl>
+
+          <div class="keychain-custom-box">
+            <p>MADE FOR YOU</p>
+            <h3>Your text. Your colours.</h3>
+            <span>Choose your initial, name and preferred colour combination. Share the details with us on WhatsApp.</span>
+          </div>
+
+          <button class="statue-whatsapp" type="button" onclick="askWhatsapp()">
+            <span>ASK ON WHATSAPP</span><b>↗</b>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-let currentProduct = "";
-let currentColour = "";
-let currentAngle = "front";
+  <footer class="statue-footer">
+    <span>OBSIDIAN ARC LAB</span>
+    <p>Made with precision · Penang, Malaysia</p>
+  </footer>
 
-const products = {
-  namekeychain: {
-    name: "Custom Name Keychain",
-    desc: "Personalized engraved name keychain with premium 3D printing finish.",
-    customText: true,
+  <script>
+    const keychainImages = [
+      { label: "T design", src: "custom-initial-tag-t-clean.jpg" },
+      { label: "N design", src: "custom-initial-tag-n-clean.jpg" }
+    ];
 
-    colours: {
-      Gold: {
-        size: "7cm",
-        material: "Gold Silk PLA",
-        weight: "40g",
-        front: "https://via.placeholder.com/500x500/d4af37/000000?text=Gold+Front",
-        side: "https://via.placeholder.com/500x500/d4af37/000000?text=Gold+Side",
-        back: "https://via.placeholder.com/500x500/d4af37/000000?text=Gold+Back"
-      },
-
-      Black: {
-        size: "7cm",
-        material: "Matte Black PLA+",
-        weight: "38g",
-        front: "https://via.placeholder.com/500x500/000000/ffffff?text=Black+Front",
-        side: "https://via.placeholder.com/500x500/000000/ffffff?text=Black+Side",
-        back: "https://via.placeholder.com/500x500/000000/ffffff?text=Black+Back"
-      },
-
-      White: {
-        size: "7cm",
-        material: "White PLA+",
-        weight: "38g",
-        front: "https://via.placeholder.com/500x500/ffffff/000000?text=White+Front",
-        side: "https://via.placeholder.com/500x500/ffffff/000000?text=White+Side",
-        back: "https://via.placeholder.com/500x500/ffffff/000000?text=White+Back"
-      },
-
-      Blue: {
-        size: "7cm",
-        material: "Blue PLA+",
-        weight: "39g",
-        front: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Blue+Front",
-        side: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Blue+Side",
-        back: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Blue+Back"
+    function openWithKeyboard(event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openProduct();
       }
     }
-  },
 
-  animekeychain: {
-    name: "Anime Keychain",
-    desc: "Premium anime-inspired collectible keychain.",
-    customText: false,
-
-    colours: {
-      Red: {
-        size: "8cm",
-        material: "PLA+",
-        weight: "45g",
-        front: "https://via.placeholder.com/500x500/ff0000/ffffff?text=Anime+Red+Front",
-        side: "https://via.placeholder.com/500x500/ff0000/ffffff?text=Anime+Red+Side",
-        back: "https://via.placeholder.com/500x500/ff0000/ffffff?text=Anime+Red+Back"
-      },
-
-      Blue: {
-        size: "8cm",
-        material: "PLA+",
-        weight: "45g",
-        front: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Anime+Blue+Front",
-        side: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Anime+Blue+Side",
-        back: "https://via.placeholder.com/500x500/0000ff/ffffff?text=Anime+Blue+Back"
-      }
+    function openProduct() {
+      changeAngle(0);
+      document.getElementById("productModal").classList.add("is-open");
+      document.body.style.overflow = "hidden";
+      document.querySelector(".statue-modal__close").focus();
     }
-  }
-};
 
-function openProduct(id){
-  currentProduct = id;
-  currentAngle = "front";
+    function changeAngle(index) {
+      const image = keychainImages[index];
+      if (!image) return;
 
-  let product = products[id];
-  let colours = Object.keys(product.colours);
+      const mainImage = document.getElementById("mainImg");
+      mainImage.src = image.src;
+      mainImage.alt = `Custom Initial Name Tag ${image.label}`;
+      document.getElementById("viewLabel").textContent = image.label.toUpperCase();
 
-  document.getElementById("productName").innerText = product.name;
-  document.getElementById("productDesc").innerText = product.desc;
+      document.querySelectorAll("#angleRow button").forEach((button, buttonIndex) => {
+        button.classList.toggle("is-active", buttonIndex === index);
+      });
+    }
 
-  let select = document.getElementById("colourSelect");
-  select.innerHTML = "";
+    function closeProduct() {
+      document.getElementById("productModal").classList.remove("is-open");
+      document.body.style.overflow = "";
+    }
 
-  colours.forEach(colour => {
-    select.innerHTML += `<option value="${colour}">${colour}</option>`;
-  });
+    function closeOnBackdrop(event) {
+      if (event.target.id === "productModal") closeProduct();
+    }
 
-  currentColour = colours[0];
-  select.value = currentColour;
+    function askWhatsapp() {
+      const message = "Hello Obsidian Arc Lab, I would like to enquire about the Custom Initial Name Tag. I would like to customise the initial, name and colour combination.";
+      openWhatsAppChoice(message);
+    }
 
-  if(product.customText){
-    document.getElementById("customTextArea").style.display = "block";
-  }else{
-    document.getElementById("customTextArea").style.display = "none";
-  }
-
-  document.getElementById("customText").value = "";
-  document.getElementById("textWarning").innerText = "";
-
-  updateDetails();
-  document.getElementById("productModal").style.display = "flex";
-}
-
-function closeProduct(){
-  document.getElementById("productModal").style.display = "none";
-}
-
-function changeColour(){
-  currentColour = document.getElementById("colourSelect").value;
-  currentAngle = "front";
-  updateDetails();
-}
-
-function changeAngle(angle){
-  currentAngle = angle;
-  updateDetails();
-}
-
-function updateDetails(){
-  let product = products[currentProduct];
-  let data = product.colours[currentColour];
-
-  document.getElementById("productSize").innerText = data.size;
-  document.getElementById("productMaterial").innerText = data.material;
-  document.getElementById("productWeight").innerText = data.weight;
-
-  document.getElementById("mainImg").src = data[currentAngle];
-  document.getElementById("frontImg").src = data.front;
-  document.getElementById("sideImg").src = data.side;
-  document.getElementById("backImg").src = data.back;
-
-  if(product.customText) updateTextLimit();
-}
-
-function updateTextLimit(){
-  if(!products[currentProduct].customText) return;
-
-  let select = document.getElementById("textLength");
-  let option = select.options[select.selectedIndex];
-
-  let min = option.dataset.min;
-  let max = option.dataset.max;
-
-  document.getElementById("customText").maxLength = max;
-
-  validateTextLength();
-}
-
-function validateTextLength(){
-  if(!products[currentProduct].customText) return;
-
-  let select = document.getElementById("textLength");
-  let option = select.options[select.selectedIndex];
-
-  let min = Number(option.dataset.min);
-  let max = Number(option.dataset.max);
-  let text = document.getElementById("customText").value.trim();
-
-  if(text.length === 0){
-    document.getElementById("textWarning").innerText =
-      "Enter " + min + " to " + max + " letters.";
-  }else if(text.length < min){
-    document.getElementById("textWarning").innerText =
-      "Minimum " + min + " letters required.";
-  }else if(text.length > max){
-    document.getElementById("textWarning").innerText =
-      "Maximum " + max + " letters only.";
-  }else{
-    document.getElementById("textWarning").innerText = "";
-  }
-}
-
-function askWhatsapp(){
-  let phone = "60175819904";
-  let product = products[currentProduct];
-
-  let text = "";
-  if(product.customText){
-    text = document.getElementById("customText").value.trim();
-  }
-
-  let msg =
-    "Hi Obsidian Arc Lab, I want to ask about " +
-    product.name +
-    " in " +
-    currentColour +
-    " colour" +
-    (text ? " with text: " + text : "") +
-    ".";
-
-  window.open(
-    "https://wa.me/" + phone + "?text=" + encodeURIComponent(msg),
-    "_blank"
-  );
-}
-</script>
-
-<script src="catalogue.js"></script>
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeProduct();
+    });
+  </script>
+  <script src="catalogue.js"></script>
+  <script src="contact-choice.js"></script>
 </body>
 </html>

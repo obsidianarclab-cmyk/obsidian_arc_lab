@@ -1,0 +1,85 @@
+.keychain-hero {
+  background:
+    radial-gradient(circle at 50% 35%, rgba(215, 195, 154, .07), transparent 25rem);
+}
+
+.keychain-list {
+  grid-template-columns: minmax(280px, 480px);
+  justify-content: center;
+}
+
+.keychain-card__image {
+  aspect-ratio: 4 / 4.35;
+}
+
+.keychain-card__image img {
+  padding: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.keychain-gallery__main {
+  background: radial-gradient(circle at 50% 42%, #24211c 0, #151513 68%, #111 100%);
+}
+
+.keychain-gallery__main img {
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.keychain-thumbs {
+  grid-template-columns: repeat(2, minmax(90px, 150px));
+  justify-content: start;
+}
+
+.keychain-thumbs img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.keychain-custom-box {
+  margin: 22px 0 18px;
+  padding: 19px 20px;
+  border: 1px solid rgba(215, 195, 154, .18);
+  border-left: 2px solid var(--statue-gold);
+  border-radius: 0 10px 10px 0;
+  background: linear-gradient(135deg, rgba(215, 195, 154, .08), rgba(255, 255, 255, .015));
+}
+
+.keychain-custom-box p {
+  margin: 0 0 8px;
+  color: var(--statue-gold-muted);
+  font-family: Inter, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .22em;
+}
+
+.keychain-custom-box h3 {
+  margin: 0 0 7px;
+  color: #ead8b4;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 27px;
+  font-weight: 500;
+}
+
+.keychain-custom-box span {
+  color: #99948a;
+  font-family: Inter, sans-serif;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+@media (max-width: 620px) {
+  .keychain-list {
+    grid-template-columns: 1fr;
+  }
+
+  .keychain-card__image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .keychain-thumbs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

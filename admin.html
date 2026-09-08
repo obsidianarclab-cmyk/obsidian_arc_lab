@@ -12,13 +12,14 @@
 <body>
 <div class="admin-shell">
   <aside>
-    <div class="side-brand"><b>OA</b><p>OBSIDIAN ARC<span>3D PRINT STUDIO</span></p></div>
+    <div class="side-brand"><p>OBSIDIAN ARC LAB<span>3D PRINT STUDIO</span></p></div>
     <nav>
       <button class="active" data-page="overview">⌂ Overview</button>
       <button data-page="orders">▣ Orders</button>
       <button data-page="expenses">↗ Expenses</button>
       <button data-page="products">◇ Price List</button>
       <button data-page="inventory">▦ Inventory</button>
+      <button data-page="work">✓ Work & Notes</button>
     </nav>
     <div class="side-quote"><span>CRAFTED WITH PURPOSE</span><p>Every layer tells a story.</p></div>
     <button class="logout" onclick="logout()">Log out</button>
@@ -33,7 +34,7 @@
     <section id="overview" class="page active">
       <div class="welcome-banner">
         <div><p class="eyebrow">WELCOME BACK, VIJI</p><h2>Your studio at a glance.</h2><p>Track every custom print, cost and milestone from one beautiful workspace.</p></div>
-        <div class="banner-orbit"><span>OA</span></div>
+        
       </div>
 
       <div class="stats">
@@ -41,6 +42,8 @@
         <article><div class="stat-icon rose">↗</div><span>Total expenses</span><strong id="spent">RM0.00</strong><small id="expenseNote">0 expenses recorded</small></article>
         <article><div class="stat-icon green">◆</div><span>Estimated profit</span><strong id="profit">RM0.00</strong><small>Sales minus expenses</small></article>
         <article><div class="stat-icon blue">◷</div><span>Open orders</span><strong id="open">0</strong><small>Need your attention</small></article>
+        <article class="company-balance-card"><div class="stat-icon gold">◎</div><span>Company balance</span><strong id="companyBalance">RM0.00</strong><small id="companyBalanceNote">Manual cash / bank balance</small><button type="button" class="stat-edit" onclick="openBalanceEditor()">Edit balance</button></article>
+        <article><div class="stat-icon blue">✓</div><span>Pending work</span><strong id="workPending">0</strong><small>Tasks still to complete</small></article>
         <article><div class="stat-icon rose">!</div><span>Unpaid balance</span><strong id="unpaidBalance">RM0.00</strong><small id="unpaidNote">0 payments outstanding</small></article>
         <article><div class="stat-icon gold">▦</div><span>Low-stock items</span><strong id="lowStockCount">0</strong><small>At or below minimum level</small></article>
       </div>
@@ -67,6 +70,7 @@
             <button onclick="goPage('expenses')"><i>↗</i><span>Add expense<small>Record studio cost</small></span></button>
             <button onclick="goPage('products')"><i>◇</i><span>New product<small>Set product price</small></span></button>
             <button onclick="goPage('inventory')"><i>▦</i><span>Update stock<small>Statues, boxes and PLA</small></span></button>
+            <button onclick="goPage('work')"><i>✓</i><span>Add work / note<small>Pending tasks, purchases & updates</small></span></button>
           </div>
         </div>
       </div>
@@ -76,7 +80,27 @@
 
     <section id="orders" class="page">
       <div class="section-intro"><div><p class="eyebrow">ORDER WORKFLOW</p><h2>Turn ideas into finished pieces.</h2></div><span>Pending → In Progress → Completed</span></div>
-      <div class="panel"><h2>Add order</h2><form id="orderForm" class="grid"><label class="order-date-field"><span>Order date</span><input name="date" id="orderDate" type="date" required></label><input name="customer" placeholder="Customer name" required><input name="phone" placeholder="Phone"><input name="product" placeholder="Product" required><input name="quantity" type="number" value="1" min="1"><input name="amount" type="number" step="0.01" min="0" placeholder="Total RM" required><select name="status"><option>Pending</option><option>In Progress</option><option>Completed</option></select><select name="paymentStatus"><option>Not Paid</option><option>Partially Paid</option><option>Paid</option></select><input name="amountPaid" type="number" step="0.01" min="0" value="0" placeholder="Amount paid RM"><label class="order-date-field"><span>Required / delivery date</span><input name="deliveryDate" type="date"></label><select name="deliveryMethod"><option value="">Select delivery method</option><option>Pickup</option><option>Delivery</option><option>Courier</option></select><input name="trackingNumber" placeholder="Tracking number"><input name="address" class="wide-field" placeholder="Customer / delivery address"><input name="notes" class="wide-field" placeholder="Notes / special instructions"><button>Save order</button></form></div>
+      <div class="panel"><h2>Add order</h2>
+        <form id="orderForm" class="grid">
+          <label class="order-date-field"><span>Order date</span><input name="date" id="orderDate" type="date" required></label>
+          <input name="customer" placeholder="Customer name" required>
+          <input name="phone" placeholder="Phone">
+          <label class="order-source-field"><span>Order from</span><select name="platform" id="orderPlatform" required><option value="">Select platform</option><option>WhatsApp</option><option>Instagram</option><option>Facebook</option><option>TikTok</option><option>Shopee</option><option>Walk-in</option><option>Other</option></select></label>
+          <label id="customPlatformWrap" class="conditional-field order-source-field" hidden><span>Other platform</span><input name="customPlatform" placeholder="Key in platform name"></label>
+          <input name="product" placeholder="Product" required>
+          <input name="quantity" type="number" value="1" min="1">
+          <input name="amount" type="number" step="0.01" min="0" placeholder="Total RM" required>
+          <select name="status"><option>Pending</option><option>In Progress</option><option>Completed</option></select>
+          <select name="paymentStatus"><option>Not Paid</option><option>Partially Paid</option><option>Paid</option></select>
+          <input name="amountPaid" type="number" step="0.01" min="0" value="0" placeholder="Amount paid RM">
+          <label class="order-date-field"><span>Required / delivery date</span><input name="deliveryDate" type="date"></label>
+          <select name="deliveryMethod"><option value="">Select delivery method</option><option>Pickup</option><option>Delivery</option><option>Courier</option></select>
+          <input name="trackingNumber" placeholder="Tracking number">
+          <input name="address" class="wide-field" placeholder="Customer / delivery address">
+          <input name="notes" class="wide-field" placeholder="Notes / special instructions">
+          <button>Save order</button>
+        </form>
+      </div>
       <div class="panel"><h2>All orders</h2><div id="orderList"></div></div>
     </section>
 
@@ -152,6 +176,44 @@
       </div>
       <div class="panel"><div class="panel-title"><div><p class="eyebrow">AVAILABLE STOCK</p><h2>Inventory list</h2></div></div><div id="inventoryList"></div></div>
     </section>
+
+    <section id="work" class="page">
+      <div class="section-intro"><div><p class="eyebrow">STUDIO TO-DO</p><h2>Work & Notes</h2><p class="price-subtitle">Keep pending work, things to buy, website updates and business notes in one place.</p></div><span>Plan → Do → Done</span></div>
+      <div class="pricing-summary work-summary">
+        <article><span>Pending</span><strong id="workPendingPage">0</strong></article>
+        <article><span>In progress</span><strong id="workProgressPage">0</strong></article>
+        <article><span>Need to buy</span><strong id="workBuyPage">0</strong></article>
+        <article><span>Website updates</span><strong id="workWebsitePage">0</strong></article>
+      </div>
+      <div class="panel price-form-panel">
+        <div class="panel-title"><div><p class="eyebrow">NEW ITEM</p><h2>Add work or note</h2></div></div>
+        <form id="workForm" class="price-grid">
+          <label>Category<select name="category" id="workCategory" required><option>Business Task</option><option>Customer Order</option><option>Need to Buy</option><option>Website Update</option><option>Social Media / Marketing</option><option>Idea / Note</option><option>Other</option></select></label>
+          <label id="customWorkCategoryWrap" class="conditional-field" hidden>Other category<input name="customCategory" placeholder="Key in category"></label>
+          <label>Task / note<input name="title" placeholder="e.g. Buy black PLA" required></label>
+          <label>Priority<select name="priority"><option>Normal</option><option>High</option><option>Urgent</option><option>Low</option></select></label>
+          <label>Status<select name="status"><option>Pending</option><option>In Progress</option><option>Done</option></select></label>
+          <label>Date added<input id="workCurrentDate" type="text" readonly aria-label="Date added"></label>
+          <label class="price-notes work-notes">Details / notes<input name="notes" placeholder="Add supplier, customer details, website change, reminder, etc."></label>
+          <button>Save work item</button>
+        </form>
+      </div>
+      <div class="panel"><div class="panel-title"><div><p class="eyebrow">MASTER LIST</p><h2>Pending work & notes</h2></div><span>Use ✓ Done when finished</span></div><div id="workList"></div></div>
+    </section>
+
+    <div id="balanceModal" class="balance-modal" hidden>
+      <div class="balance-modal-card" role="dialog" aria-modal="true" aria-labelledby="balanceTitle">
+        <button type="button" class="balance-close" onclick="closeBalanceEditor()" aria-label="Close">×</button>
+        <p class="eyebrow">COMPANY MONEY</p>
+        <h2 id="balanceTitle">Update company balance</h2>
+        <p>Enter how much money Obsidian Arc Lab currently has. This is a manual balance, so you can update it anytime.</p>
+        <form id="balanceForm">
+          <label>Current balance (RM)<input name="balance" id="balanceInput" type="number" step="0.01" min="0" required></label>
+          <label>Note <input name="note" id="balanceNoteInput" placeholder="e.g. Cash + bank balance"></label>
+          <button type="submit">Save balance</button>
+        </form>
+      </div>
+    </div>
   </main>
 </div>
 <script src="admin.js"></script>

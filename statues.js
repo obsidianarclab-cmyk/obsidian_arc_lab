@@ -1,41 +1,52 @@
 const products = {
   ganesha: {
     name: "Mini Ganesha",
-    desc: "A detailed Ganesha statue created for prayer spaces, meaningful gifts and refined spiritual décor.",
+    desc: "A detailed Mini Ganesha statue that brings peace and positivity to prayer spaces and refined spiritual décor. A thoughtful and meaningful gift.",
     colours: {
       White: {
-        size: "Available in custom sizes",
+        size: "5 cm height",
         material: "White PLA",
-        weight: "Varies by selected size",
-        images: [{ label: "Front", src: "image/Mini_Ganesha/Mini_Ganesha_White-Front.jpg" }]
-      },
-      Gold: {
-        size: "Available in custom sizes",
-        material: "Gold Silk PLA",
-        weight: "Varies by selected size",
-        images: [{ label: "Front", src: "image/Mini_Ganesha/Mini_Ganesha_Gold-Front.jpg" }]
+        weight: "Lightweight and durable",
+        images: [
+          { label: "White", src: "mini-ganesha-white.png" },
+          { label: "Product details", src: "mini-ganesha-details.jpg" }
+        ]
       },
       Black: {
-        size: "Available in custom sizes",
+        size: "5 cm height",
         material: "Black PLA",
-        weight: "Varies by selected size",
-        images: [{ label: "Front", src: "image/Mini_Ganesha/Mini_Ganesha_Black-Front.jpg" }]
+        weight: "Lightweight and durable",
+        images: [
+          { label: "Black", src: "mini-ganesha-black.png" },
+          { label: "Product details", src: "mini-ganesha-details.jpg" }
+        ]
+      },
+      Gold: {
+        size: "5 cm height",
+        material: "Gold Silk PLA",
+        weight: "Lightweight and durable",
+        images: [
+          { label: "Gold", src: "mini-ganesha-gold.png" },
+          { label: "Product details", src: "mini-ganesha-details.jpg" }
+        ]
       }
     }
   },
   anjaneya: {
-    name: "Mini Anjaneya",
-    desc: "A detailed Anjaneya statue suitable for spiritual décor, gifting and custom-colour printing.",
+    name: "Mini Hanuman",
+    desc: "A detailed, finely finished Hanuman statue that brings peace, harmony and spiritual connection into your space. Lightweight, durable and ideal for home, office, shrine or meaningful gifting.",
     colours: {
-      White: {
-        size: "Small: 5 × 7 × 8 cm · Medium: 10 × 12 × 13 cm",
-        material: "White PLA",
-        weight: "Varies by selected size",
+      "Silky White / Matte White": {
+        size: "Small: 5, 7 or 8 cm · Medium: 10, 12 or 13 cm · Large: 15, 17 or 19 cm",
+        material: "Premium eco-friendly, non-toxic PLA",
+        weight: "Lightweight and durable",
         images: [
-          { label: "Front", src: "image/hanuman/Hanuman_White-Front.jpeg" },
-          { label: "Left side", src: "image/hanuman/Hanuman_White-Side1.jpeg" },
-          { label: "Right side", src: "image/hanuman/Hanuman_White-Side2.jpeg" },
-          { label: "Back", src: "image/hanuman/Hanuman_White-Back.jpeg" }
+          { label: "Product details", src: "mini-hanuman-main.jpg" },
+          { label: "Front", src: "anjaneya-front.jpg" },
+          { label: "Side", src: "anjaneya-side.jpg" },
+          { label: "Back", src: "anjaneya-back.jpg" },
+          { label: "Display", src: "anjaneya-lamp-display.jpg" },
+          { label: "Size guide", src: "anjaneya-size-guide.jpg" }
         ]
       }
     }
@@ -48,7 +59,22 @@ const products = {
         size: "Small: 5 × 7 × 8 cm · Medium: 10 × 12 × 13 cm · Large: 15 × 17 × 19 cm",
         material: "Gold and White PLA",
         weight: "Varies by selected size",
-        images: [{ label: "Main", src: "image/Buddha/Buddha_Gold+White-Main.jpg" }]
+        images: [
+          { label: "Front", src: "buddha-gold-white-front.jpg" },
+          { label: "Lifestyle", src: "buddha-gold-white-lifestyle.jpg" },
+          { label: "Back", src: "buddha-white-back.jpg" },
+          { label: "Size guide", src: "buddha-size-guide.jpg" }
+        ]
+      },
+      White: {
+        size: "Small: 5 × 7 × 8 cm · Medium: 10 × 12 × 13 cm · Large: 15 × 17 × 19 cm",
+        material: "White PLA",
+        weight: "Varies by selected size",
+        images: [
+          { label: "Front", src: "buddha-white-front.jpg" },
+          { label: "Back", src: "buddha-white-back.jpg" },
+          { label: "Size guide", src: "buddha-size-guide.jpg" }
+        ]
       }
     }
   }
@@ -98,7 +124,7 @@ function updateProductDetails() {
   const row = document.getElementById("angleRow");
   row.innerHTML = data.images.map((image, index) => `
     <button type="button" class="${index === 0 ? "is-active" : ""}" onclick="changeAngle(${index})" aria-label="Show ${image.label} view">
-      <img src="${image.src}" alt="${currentProduct.name} ${image.label.toLowerCase()} view">
+      <img src="${image.src}" ${image.fallback ? `onerror="this.onerror=null;this.src='${image.fallback}';this.closest('button').classList.add('is-placeholder')"` : ""} alt="${currentProduct.name} ${image.label.toLowerCase()} view">
     </button>
   `).join("");
 
@@ -111,6 +137,11 @@ function changeAngle(index) {
   if (!image) return;
 
   const mainImage = document.getElementById("mainImg");
+  mainImage.onerror = image.fallback ? () => {
+    mainImage.onerror = null;
+    mainImage.src = image.fallback;
+    document.getElementById("viewLabel").textContent = `${image.label.toUpperCase()} VIEW · PHOTO COMING SOON`;
+  } : null;
   mainImage.src = image.src;
   mainImage.alt = `${currentProduct.name} ${image.label.toLowerCase()} view`;
   document.getElementById("viewLabel").textContent = `${image.label.toUpperCase()} VIEW`;
@@ -132,7 +163,7 @@ function closeOnBackdrop(event) {
 function askWhatsapp() {
   if (!currentProduct || !currentFinish) return;
   const message = `Hello Obsidian Arc Lab, I would like to enquire about ${currentProduct.name} in ${currentFinish}. Please share the price and customisation details.`;
-  window.open(`https://wa.me/60103738630?text=${encodeURIComponent(message)}`, "_blank", "noopener");
+  openWhatsAppChoice(message);
 }
 
 document.addEventListener("keydown", event => {

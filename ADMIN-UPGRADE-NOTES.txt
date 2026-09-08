@@ -1,0 +1,27 @@
+OBSIDIAN ARC LAB - ADMIN UPGRADE
+
+Added:
+1. Overview -> editable Company Balance card.
+2. Overview -> Pending Work count.
+3. Orders -> "Order from" dropdown:
+   WhatsApp, Instagram, Facebook, TikTok, Shopee, Walk-in, Other.
+   Choosing Other opens a manual platform field.
+4. New "Work & Notes" page for:
+   - Business tasks
+   - Customer order work
+   - Need to Buy
+   - Website Update
+   - Social Media / Marketing
+   - Ideas / Notes
+   - Other custom categories
+   Each item has priority, status, due date, notes, edit/delete and a quick Done button.
+5. Export now also includes Work & Notes and Company Balance.
+
+GOOGLE SHEETS NOTE:
+The current deployed Google Apps Script was originally built for orders, expenses,
+products and inventory. Work & Notes and Company Balance are saved in browser
+local storage and included in Export Excel/CSV. The new order platform field is
+also kept locally even when the existing Google Sheet data is reloaded.
+
+To make these new fields available across different devices through Google Sheets,
+the deployed Apps Script schema will also need to be upgraded later.

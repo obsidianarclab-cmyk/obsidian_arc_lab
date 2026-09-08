@@ -212,6 +212,7 @@
 .statue-gallery__thumbs { display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 10px; margin-top: 10px; }
 
 .statue-gallery__thumbs button {
+  position: relative;
   padding: 7px;
   border: 1px solid var(--statue-line);
   border-radius: 10px;
@@ -219,6 +220,7 @@
   cursor: pointer;
   transition: .25s ease;
 }
+.statue-gallery__thumbs button.is-placeholder::after { content: "SOON"; position: absolute; right: 4px; bottom: 4px; padding: 3px 5px; background: #0a0a09; color: #d6bea0; font: 600 7px/1 Inter, sans-serif; letter-spacing: 1px; }
 
 .statue-gallery__thumbs button:hover,
 .statue-gallery__thumbs button.is-active { border-color: var(--statue-gold); transform: translateY(-2px); }
@@ -280,3 +282,4 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+.anime-request-card__art{height:100%;min-height:420px;display:grid;place-content:center;text-align:center;background:radial-gradient(circle,rgba(214,199,166,.12),transparent 55%),linear-gradient(145deg,#171510,#090a0c);border-bottom:1px solid var(--statue-line)}.anime-request-card__art span{width:90px;height:90px;display:grid;place-items:center;margin:auto;border:1px solid var(--statue-gold);border-radius:50%;color:var(--statue-gold);font:300 44px/1 Inter,sans-serif}.anime-request-card__art p{margin-top:22px;color:var(--statue-gold-muted);font:600 9px/1 Inter,sans-serif;letter-spacing:.25em}.anime-hero-premium{background:radial-gradient(circle at 75% 35%,rgba(99,128,164,.13),transparent 27%),#090a0c}

@@ -1,0 +1,23 @@
+STATUE GALLERY IMAGE NAMES
+
+Upload these missing photos into the same folder as statues.html and statues.js.
+Keep the spelling, capital letters, + symbol and file extension exactly the same.
+
+Mini Ganesha — White
+Mini_Ganesha_White-Side.jpg
+Mini_Ganesha_White-Back.jpg
+
+Mini Ganesha — Gold
+Mini_Ganesha_Gold-Side.jpg
+Mini_Ganesha_Gold-Back.jpg
+
+Mini Ganesha — Black
+Mini_Ganesha_Black-Side.jpg
+Mini_Ganesha_Black-Back.jpg
+
+Mini Buddha — Gold + White
+Buddha_Gold+White-Side.jpg
+Buddha_Gold+White-Back.jpg
+
+Until a missing file is uploaded, the catalogue uses the existing front image
+and displays PHOTO COMING SOON. No JavaScript changes are needed later.

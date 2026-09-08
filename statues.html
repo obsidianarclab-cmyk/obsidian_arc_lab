@@ -9,21 +9,23 @@
   <link rel="stylesheet" href="statues.css">
   <link rel="stylesheet" href="professional.css">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="contact-choice.css">
 </head>
 
 <body class="statues-page">
   <header class="navbar">
     <a class="logo" href="index.html" aria-label="Obsidian Arc Lab home">
-      Obsidian Arc
-      <span>LAB · EST. 2026</span>
+      Obsidian Arc Lab
+      <span>EST. 2026</span>
     </a>
 
     <nav aria-label="Main navigation">
-      <a href="index.html">HOME</a>
-      <a href="collection.html">COLLECTION</a>
-      <a href="commission.html">CONTACT</a>
-      <a class="admin-link" href="admin-login.html">ADMIN LOGIN</a>
-    </nav>
+    <a href="index.html">HOME</a>
+    <a href="collection.html">COLLECTION</a>
+    <a href="atelier.html">OUR STORY</a>
+    <a href="commission.html">CUSTOM ORDER</a>
+    <a class="admin-link" href="admin-login.html">ADMIN LOGIN</a>
+  </nav>
   </header>
 
   <main>
@@ -36,31 +38,34 @@
     <section class="statue-list" aria-label="Statue catalogue">
       <article class="statue-card" tabindex="0" role="button" onclick="openProduct('ganesha')" onkeydown="openWithKeyboard(event, 'ganesha')">
         <div class="statue-card__image">
-          <img src="image/Mini_Ganesha/Ganesha_Main.jpg" alt="Mini Ganesha 3D printed statue">
+          <img src="mini-ganesha-details.jpg" alt="Mini Ganesha product details and 5 cm available size">
           <span class="statue-card__view">VIEW DETAILS <b>↗</b></span>
         </div>
         <div class="statue-card__body">
           <p>3D PRINTED STATUE</p>
           <h2>Mini Ganesha</h2>
-          <span>Three colour finishes</span>
+          <span>5 cm height · White, black or gold</span>
         </div>
       </article>
 
       <article class="statue-card" tabindex="0" role="button" onclick="openProduct('anjaneya')" onkeydown="openWithKeyboard(event, 'anjaneya')">
         <div class="statue-card__image">
-          <img src="image/hanuman/Hanuman_Main.jpg" alt="Mini Anjaneya 3D printed statue">
+          <img src="mini-hanuman-main.jpg" alt="Mini Hanuman 3D printed statue and available sizes">
           <span class="statue-card__view">VIEW DETAILS <b>↗</b></span>
         </div>
         <div class="statue-card__body">
           <p>3D PRINTED STATUE</p>
-          <h2>Mini Anjaneya</h2>
-          <span>Four-angle product view</span>
+          <h2>Mini Hanuman</h2>
+          <span>Silky white · Matte white · Three size groups</span>
+          <!-- <span>Four-angle product view</span> -->
         </div>
       </article>
 
       <article class="statue-card" tabindex="0" role="button" onclick="openProduct('buddha')" onkeydown="openWithKeyboard(event, 'buddha')">
         <div class="statue-card__image">
-          <img src="image/Buddha/Buddha_Gold+White-Main.jpg" alt="Mini Buddha 3D printed statue">
+          <img src="buddha-size-guide.jpg" alt="Mini Buddha 3D printed statue">
+        <!--  <img src="buddha-gold-white-front.jpg" alt="Mini Buddha 3D printed statue"> -->
+
           <span class="statue-card__view">VIEW DETAILS <b>↗</b></span>
         </div>
         <div class="statue-card__body">
@@ -116,5 +121,6 @@
 
   <script src="statues.js"></script>
   <script src="catalogue.js"></script>
+<script src="contact-choice.js"></script>
 </body>
 </html>
